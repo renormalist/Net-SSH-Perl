@@ -1,4 +1,4 @@
-# $Id: Perl.pm,v 1.108 2001/10/04 20:29:19 btrott Exp $
+# $Id: Perl.pm,v 1.113 2004/01/19 19:15:36 autarch Exp $
 
 package Net::SSH::Perl;
 use strict;
@@ -22,7 +22,7 @@ eval {
     $HOSTNAME = hostname();
 };
 
-$VERSION = '1.24';
+$VERSION = '1.25';
 
 sub VERSION { $VERSION }
 
@@ -850,10 +850,12 @@ for more details.
 For samples/tutorials, take a look at the scripts in F<eg/> in
 the distribution directory.
 
-If you have any questions, code samples, bug reports, or
-feedback, please email them to:
+There is a mailing list for development discussion and usage
+questions.  Posting is limited to subscribers only.  You can sign up
+at http://lists.sourceforge.net/lists/listinfo/ssh-sftp-perl-users
 
-    ben@rhumba.pair.com
+Please report all bugs via rt.cpan.org at
+https://rt.cpan.org/NoAuth/ReportBug.html?Queue=net%3A%3Assh%3A%3Aperl
 
 =head1 AUTHOR
 
@@ -863,9 +865,9 @@ Originally written by Benjamin Trott.
 
 =head1 COPYRIGHT
 
-Copyright (c) 2001 Benjamin Trott.  All rights reserved.  This program
-is free software; you can redistribute it and/or modify it under the
-same terms as Perl itself.
+Copyright (c) 2001 Benjamin Trott, Copyright (c) 2003 David Rolsky.
+All rights reserved.  This program is free software; you can
+redistribute it and/or modify it under the same terms as Perl itself.
 
 The full text of the license can be found in the LICENSE file included
 with this module.

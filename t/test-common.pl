@@ -1,3 +1,5 @@
+use strict;
+
 use vars qw( $D_BASE $T_BASE );
 use vars qw( $CFG_FILE $PORT $KNOWN_HOSTS $IDENTITY $PSSHD $PID_FILE
              $USER_AUTHORIZED_KEYS $DUMMY_PASSWD );

@@ -1,4 +1,4 @@
-# $Id: Channel.pm,v 1.16 2001/08/07 18:19:31 btrott Exp $
+# $Id: Channel.pm,v 1.18 2003/12/03 15:35:21 autarch Exp $
 
 package Net::SSH::Perl::Channel;
 use strict;

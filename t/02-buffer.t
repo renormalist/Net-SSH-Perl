@@ -1,56 +1,53 @@
-# $Id: 02-buffer.t,v 1.7 2001/04/22 03:35:15 btrott Exp $
+#!/usr/bin/perl -w
 
 use strict;
 
-use Test;
-BEGIN { plan tests => 20 }
+use Test::More tests => 19;
 
-use vars qw( $loaded );
-END { print "not ok 1\n" unless $loaded; }
 use Net::SSH::Perl::Buffer qw( SSH1 );
-$loaded++;
-ok($loaded);
 
 use Math::GMP;
 
 my $buffer = Net::SSH::Perl::Buffer->new;
-ok($buffer);
+
+ok( $buffer, 'make a buffer' );
 $buffer->put_str("foo");
-ok($buffer->length, 7);
-ok($buffer->get_str, "foo");
-ok($buffer->offset, 7);
+
+is( $buffer->length, 7, 'buffer length is 7' );
+is( $buffer->get_str, "foo", 'get_str returns "foo"' );
+is( $buffer->offset, 7, 'offset is 7' );
 
 $buffer->put_str(0);
-ok($buffer->get_str, 0);
+is( $buffer->get_str, 0, 'get_str returns 0' );
 
-$buffer->put_int32(999999999);
-ok($buffer->get_int32, 999999999);
+$buffer->put_int32(999_999_999);
+is( $buffer->get_int32, 999_999_999, 'get_int32 returns 999,99,999' );
 
 $buffer->put_int8(2);
-ok($buffer->get_int8, 2);
+is( $buffer->get_int8, 2, 'get_int8 returns 2' );
 
 $buffer->put_char('a');
-ok($buffer->get_char, 'a');
+is( $buffer->get_char, 'a', 'get_char returns "a"' );
 
 my $gmp = Math::GMP->new("999999999999999999999999999999");
 $buffer->put_mp_int($gmp);
 my $tmp = $buffer->get_mp_int;
-ok("$tmp", "$gmp");
+is( "$tmp", "$gmp", 'get_mp_int returns very large number' );
 
 $buffer->empty;
-ok($buffer->offset, 0);
-ok($buffer->length, 0);
-ok($buffer->bytes, '');
+is( $buffer->offset, 0, 'offset is 0 after empty()' );
+is( $buffer->length, 0, 'length is 0 after empty()' );
+is( $buffer->bytes, '', 'bytes is "" after empty()' );
 
 $buffer->append("foobar");
-ok($buffer->length, 6);
-ok($buffer->bytes, "foobar");
+is( $buffer->length, 6, 'length is 6 after append' );
+is( $buffer->bytes, "foobar", 'bytes is "foobar" after append' );
 
 $buffer->empty;
-ok($buffer->length, 0);
-ok($buffer->dump, '');
+is( $buffer->length, 0, 'length is 0 after empty() again' );
+is( $buffer->dump, '' , 'dump returns ""' );
 
 $buffer->put_int16(129);
-ok($buffer->get_int16, 129);
-ok($buffer->dump, '00 81');
-ok($buffer->dump(1), '81');
+is( $buffer->get_int16, 129, 'get_int16 returns 129' );
+is( $buffer->dump, '00 81', 'dump returns "00 81"' );
+is( $buffer->dump(1), '81', 'dump(1) returns "81"' );

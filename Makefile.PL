@@ -1,4 +1,4 @@
-# $Id: Makefile.PL,v 1.22 2001/09/14 19:30:10 btrott Exp $
+# $Id: Makefile.PL,v 1.25 2003/12/14 05:39:29 autarch Exp $
 
 use ExtUtils::MakeMaker qw( prompt WriteMakefile );
 use strict;
@@ -50,8 +50,8 @@ my @cryptmod = (
 );
 
 if ($is_sdk) {
-    for my $mod (keys %{ $BASE_PREREQS{3} }) {
-        $prereq{$mod} = $BASE_PREREQS{3}{$mod};
+    for my $mod (keys %{ $BASE_PREREQS{sdk} }) {
+        $prereq{$mod} = $BASE_PREREQS{sdk}{$mod};
     }
 
     for my $list (\@cryptmod) {
@@ -179,7 +179,7 @@ WriteMakefile(
     DISTNAME => 'Net-SSH-Perl',
     VERSION_FROM => 'lib/Net/SSH/Perl.pm',
     PREREQ_PM    => \%prereq,
-    AUTHOR => 'Benjamin Trott <ben@rhumba.pair.com>',
+    AUTHOR => 'Dave Rolsky <autarch@urth.org>',
     ABSTRACT => 'Perl client Interface to SSH',
 );
 

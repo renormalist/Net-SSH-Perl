@@ -1,4 +1,4 @@
-# $Id: Packet.pm,v 1.20 2001/07/25 22:25:38 btrott Exp $
+# $Id: Packet.pm,v 1.24 2003/12/20 04:39:25 autarch Exp $
 
 package Net::SSH::Perl::Packet;
 
@@ -106,6 +106,7 @@ sub read_poll_ssh1 {
 
     unless (defined &_crc32) {
         eval "use Net::SSH::Perl::Util qw( _crc32 );";
+        die $@ if $@;
     }
 
     my $incoming = $ssh->incoming_data;
@@ -332,8 +333,8 @@ sub AUTOLOAD {
     (my $meth = $AUTOLOAD) =~ s/.*://;
     return if $meth eq "DESTROY";
 
-    if (my $code = $pack->{data}->can($meth)) {
-        $code->($pack->{data}, @_);
+    if ( $pack->{data}->can($meth) ) {
+        $pack->{data}->$meth(@_);
     }
     else {
         croak "Can't dispatch method $meth to Net::SSH::Perl::Buffer object.";

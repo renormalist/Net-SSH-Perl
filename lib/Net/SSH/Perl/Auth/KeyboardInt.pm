@@ -1,4 +1,4 @@
-# $Id: KeyboardInt.pm,v 1.4 2001/05/31 17:18:13 btrott Exp $
+# $Id: KeyboardInt.pm,v 1.6 2003/12/03 15:35:21 autarch Exp $
 
 package Net::SSH::Perl::Auth::KeyboardInt;
 

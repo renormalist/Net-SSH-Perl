@@ -1,4 +1,4 @@
-# $Id: $
+# $Id: 06-circular.t,v 1.2 2003/12/03 15:35:21 autarch Exp $
 
 use strict;
 

@@ -1,4 +1,4 @@
-# $Id: ChallengeResponse.pm,v 1.1 2001/07/03 07:04:22 btrott Exp $
+# $Id: ChallengeResponse.pm,v 1.3 2003/12/03 15:35:21 autarch Exp $
 
 package Net::SSH::Perl::Auth::ChallengeResponse;
 use strict;

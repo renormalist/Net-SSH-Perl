@@ -1,4 +1,4 @@
-# $Id: DH1.pm,v 1.15 2001/07/11 21:57:31 btrott Exp $
+# $Id: DH1.pm,v 1.17 2003/12/03 15:35:21 autarch Exp $
 
 package Net::SSH::Perl::Kex::DH1;
 use strict;

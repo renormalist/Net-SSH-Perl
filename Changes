@@ -1,11 +1,18 @@
 Revision history for Net::SSH::Perl
 
+1.25  2004.01.19
+    - Fix a bizarre test failure in 03-packet.t if String::CRC32 isn't
+      installed (the tests were testing SSH1 but we can't assume the
+      user selected this protocol).  Reported by Damien Clark.
+      rt.cpan.org ticket #4717.
+
 1.24  2003.11.14
     - New (temporary) maintainer, Dave Rolsky.
     - Fixed a number of circular references in the SSH2
       implementation, which caused connections to be held open
       indefinitely in a persistent environment like mod_perl.  This
-      uses weak references, so Perl 5.6.0+ is now required.
+      uses weak references, so Perl 5.6.0+ is now required.  This work
+      was funded by Kineticode, Inc.
     - Added a LICENSE file.
 
 1.23  2001.10.04

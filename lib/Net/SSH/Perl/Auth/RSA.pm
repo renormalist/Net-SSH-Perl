@@ -1,4 +1,4 @@
-# $Id: RSA.pm,v 1.14 2001/05/31 18:57:49 btrott Exp $
+# $Id: RSA.pm,v 1.16 2003/12/03 15:35:21 autarch Exp $
 
 package Net::SSH::Perl::Auth::RSA;
 

@@ -1,4 +1,4 @@
-# $Id: Rhosts_RSA.pm,v 1.11 2001/05/10 07:15:37 btrott Exp $
+# $Id: Rhosts_RSA.pm,v 1.13 2003/12/03 15:35:21 autarch Exp $
 
 package Net::SSH::Perl::Auth::Rhosts_RSA;
 

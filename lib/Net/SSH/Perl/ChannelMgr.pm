@@ -1,4 +1,4 @@
-# $Id: ChannelMgr.pm,v 1.7 2001/08/07 18:19:31 btrott Exp $
+# $Id: ChannelMgr.pm,v 1.9 2003/12/03 15:35:21 autarch Exp $
 
 package Net::SSH::Perl::ChannelMgr;
 use strict;

@@ -1,4 +1,4 @@
-# $Id: Kex.pm,v 1.18 2001/07/11 21:57:26 btrott Exp $
+# $Id: Kex.pm,v 1.20 2003/12/03 15:35:21 autarch Exp $
 
 package Net::SSH::Perl::Kex;
 use strict;

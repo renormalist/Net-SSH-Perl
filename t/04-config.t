@@ -1,88 +1,112 @@
-# $Id: 04-config.t,v 1.9 2001/04/22 03:31:46 btrott Exp $
+#!/usr/bin/perl -w
 
 use strict;
 
+use Test::More tests => 25;
+
 use vars qw( $CFG_FILE );
-BEGIN { unshift @INC, 't/' }
+
+use lib 't';
+
 require 'test-common.pl';
 
 use Net::SSH::Perl;
 use Net::SSH::Perl::Config;
 
-use Test;
-BEGIN { plan tests => 26 };
+my $cfg = Net::SSH::Perl::Config->new("foo");
 
-my($cfg, $ssh);
+{
+    ok( $cfg, 'created config object' );
+    $cfg->read_config($CFG_FILE);
 
-$cfg = Net::SSH::Perl::Config->new("foo");
-ok($cfg);
-$cfg->read_config($CFG_FILE);
+    is( $cfg->get('port'), 10000, 'port is 10000' );
 
-## Test get/set methods on port/Port directive.
-ok($cfg->get('port'), 10000);
-$cfg->set('port', 5000);
-ok($cfg->get('port'), 5000);
+    $cfg->set('port', 5000);
+    is( $cfg->get('port'), 5000, 'port was set to 5000' );
+}
 
-## Test identity file special case.
-my $if = $cfg->get('identity_files');
-ok($if && UNIVERSAL::isa($if, 'ARRAY'));
-ok(scalar @$if, 2);
-ok($if->[0], 'identity');
-ok($if->[1], 'identity2');
+{
+    ## Test identity file special case.
+    my $if = $cfg->get('identity_files');
+    ok( $if, 'got identity_files config' );
+    is( scalar @$if, 2, 'got two entries' );
+    is( $if->[0], 'identity', 'first entry is "identity"' );
+    is( $if->[1], 'identity2', 'second entry is "identity2"' );
+}
 
-## Test "Cipher" config directive, which was broken in versions
-## prior to 0.64.
-$cfg->merge_directive("Cipher idea");
-ok($cfg->get('cipher'), 'IDEA');
+{
+    ## Test "Cipher" config directive, which was broken in versions
+    ## prior to 0.64.
+    $cfg->merge_directive("Cipher idea");
+    is( $cfg->get('cipher'), 'IDEA', 'cipher is IDEA after merge' );
+}
 
+my $cfg2 = Net::SSH::Perl::Config->new( "foo", port => 22 );
+{
+    ## Test whether options given in constructor override config file.
+    ok( $cfg2, 'create a new config with an overridden option' );
+    $cfg2->read_config($CFG_FILE);
+    is( $cfg2->get('port'), 22, 'port is 22' );
+}
 
-## Test whether options given in constructor override config file.
-$cfg = Net::SSH::Perl::Config->new("foo", port => 22);
-ok($cfg);
-$cfg->read_config($CFG_FILE);
-ok($cfg->get('port'), 22);
+{
+    ## Test whether we can use merge_directive to merge in a directive
+    ## in a string.
+    $cfg2->merge_directive("RhostsAuthentication no");
+    ok( ! $cfg2->get('auth_rhosts'), 'auth_rhosts is false' );
+}
 
-## Test whether we can use merge_directive to merge in a directive
-## in a string.
-$cfg->merge_directive("RhostsAuthentication no");
-ok($cfg->get('auth_rhosts'), 0);
+my $cfg3 = Net::SSH::Perl::Config->new("dummy");
 
-## Test grabbing a different Host record from the config file.
-$cfg = Net::SSH::Perl::Config->new("dummy");
-ok($cfg);
-ok($cfg->{host}, "dummy");
-$cfg->read_config($CFG_FILE);
-ok($cfg->get('port'), 5000);
-ok($cfg->get('interactive'), 1);
+{
+    ## Test grabbing a different Host record from the config file.
+    is( $cfg3->{host}, "dummy" ,'host is "dummy"' );
+    $cfg3->read_config($CFG_FILE);
+    is( $cfg3->get('port'), 5000, 'port is 5000' );
+    ok( $cfg3->get('interactive'), 'interactive is true' );
+}
 
-## Test that config file gets read correctly when passed to
-## Net::SSH::Perl constructor.
-$ssh = Net::SSH::Perl->new("foo", user_config => $CFG_FILE, _test => 1);
-ok($ssh);
-ok($ssh->config);
-ok($ssh->config->get('port'), 10000);
+{
+    ## Test that config file gets read correctly when passed to
+    ## Net::SSH::Perl constructor.
+    my $ssh = Net::SSH::Perl->new( 'foo', user_config => $CFG_FILE, _test => 1 );
+    ok( $ssh, 'make a new SSH object' );
+    ok( $ssh->config, 'object has config' );
+    is( $ssh->config->get('port'), 10000, 'port for object is 10000' );
 
-## Test that Net::SSH::Perl uses the HostName directive to
-## override the host passed to the constructor.
-ok($ssh->config->get('hostname'), 'foo.bar.com');
-ok($ssh->{host}, 'foo.bar.com');
+    ## Test that Net::SSH::Perl uses the HostName directive to
+    ## override the host passed to the constructor.
+    is( $ssh->config->get('hostname'), 'foo.bar.com', 'hostname is foo.bar.com' );
+    is( $ssh->{host}, 'foo.bar.com', 'host key in object is foo.bar.com' );
+}
 
-## And that constructor overrides work here, as well.
-$ssh = Net::SSH::Perl->new("foo", user_config => $CFG_FILE, port => 22, _test => 1);
-ok($ssh->config->get('port'), 22);
+{
+    ## And that constructor overrides work here, as well.
+    my $ssh = Net::SSH::Perl->new( 'foo', user_config => $CFG_FILE, port => 22, _test => 1 );
+    is( $ssh->config->get('port'), 22, 'port is 22 after override in SSH constructor' );
+}
 
-## And now test whether we can set additional options through
-## Net::SSH::Perl constructor; and that they override config
-## file.
-$ssh = Net::SSH::Perl->new("foo", user_config => $CFG_FILE, options => [
-    "Port 22", "RhostsAuthentication no", "BatchMode no" ], _test => 1);
-ok($ssh->config->get('port'), 22);
-ok($ssh->config->get('auth_rhosts'), 0);
-ok($ssh->config->get('interactive'), 1);
+{
+    ## And now test whether we can set additional options through
+    ## Net::SSH::Perl constructor; and that they override config
+    ## file.
+    my $ssh = Net::SSH::Perl->new( 'foo', user_config => $CFG_FILE,
+                                   options => [ "Port 22",
+                                                "RhostsAuthentication no",
+                                                "BatchMode no" ],
+                                   _test => 1 );
 
-## Test whether a user we pass in through constructor properly
-## overrides the absence of a user passed in through login method.
-$ssh = Net::SSH::Perl->new("foo", options => [ "User bar" ], _test => 1);
-ok($ssh->config->get('user'), 'bar');
-$ssh->login;
-ok($ssh->config->get('user'), 'bar');
+    is( $ssh->config->get('port'), 22, 'port is 22 after override via "options"' );
+    ok( ! $ssh->config->get('auth_rhosts'), 'auth_rhosts is false' );
+    ok( $ssh->config->get('interactive'), 'interactive is true' );
+
+}
+
+{
+    ## Test whether a user we pass in through constructor properly
+    ## overrides the absence of a user passed in through login method.
+    my $ssh = Net::SSH::Perl->new( 'foo', options => [ "User bar" ], _test => 1 );
+    is( $ssh->config->get('user'), 'bar', 'user is "bar"' );
+    $ssh->login;
+    is( $ssh->config->get('user'), 'bar', 'user is "bar" after ->login' );
+}

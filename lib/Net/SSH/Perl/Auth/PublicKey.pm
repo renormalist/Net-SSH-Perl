@@ -1,4 +1,4 @@
-# $Id: PublicKey.pm,v 1.18 2001/07/11 21:57:28 btrott Exp $
+# $Id: PublicKey.pm,v 1.20 2003/12/03 15:35:21 autarch Exp $
 
 package Net::SSH::Perl::Auth::PublicKey;
 
