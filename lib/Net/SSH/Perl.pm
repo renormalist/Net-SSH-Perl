@@ -1,4 +1,4 @@
-# $Id: Perl.pm,v 1.115 2005/01/18 18:08:25 autarch Exp $
+# $Id: Perl.pm,v 1.116 2005/02/05 06:33:19 dbrobins Exp $
 
 package Net::SSH::Perl;
 use strict;
@@ -22,7 +22,7 @@ eval {
     $HOSTNAME = hostname();
 };
 
-$VERSION = '1.26';
+$VERSION = '1.27';
 
 sub VERSION { $VERSION }
 
@@ -198,9 +198,7 @@ sub _connect {
     my $rport = $ssh->{config}->get('port') || 'ssh';
     if ($rport =~ /\D/) {
         my @serv = getservbyname(my $serv = $rport, 'tcp');
-        $rport = $serv[2];
-        croak "Can't map service name '$serv' to port number"
-            unless defined $rport;
+        $rport = $serv[2] || 22;
     }
     $ssh->debug("Connecting to $ssh->{host}, port $rport.");
     connect($sock, sockaddr_in($rport, $raddr))
@@ -211,7 +209,7 @@ sub _connect {
     $ssh->{session}{sock} = $sock;
     $ssh->_exchange_identification;
 
-    fcntl($sock, F_SETFL, O_NONBLOCK)
+    defined($sock->blocking(0))
         or die "Can't set socket non-blocking: $!";
 
     $ssh->debug("Connection established.");
@@ -220,26 +218,31 @@ sub _connect {
 sub _create_socket {
     my $ssh = shift;
     my $sock = gensym;
-    if ($ssh->{config}->get('privileged')) {
-        my $p;
-        my $proto = getprotobyname('tcp');
-        for ($p = 1023; $p > 512; $p--) {
-            socket($sock, AF_INET, SOCK_STREAM, $proto) ||
-                croak "Net::SSH: Can't create socket: $!";
-            last if bind($sock, sockaddr_in($p, INADDR_ANY));
-            if ($! =~ /Address already in use/i) {
-                close($sock);
-                next;
-            }
-            croak "Net::SSH: Can't bind socket to port $p: $!";
-        }
-        $ssh->debug("Allocated local port $p.");
-        $ssh->{config}->set('localport', $p);
-    }
-    else {
-        socket($sock, AF_INET, SOCK_STREAM, 0) ||
+
+	my ($p,$end,$delta) = (0,1,1);	# normally we use whatever port we can get
+   	   ($p,$end,$delta) = (1023,512,-1) if $ssh->{config}->get('privileged');
+
+	# allow an explicit bind address
+    my $addr = $ssh->{config}->get('bind_address');
+	$addr = inet_aton($addr) if $addr;
+	($p,$end,$delta) = (10000,65535,1) if $addr and not $p;
+	$addr ||= INADDR_ANY;
+
+    for(; $p != $end; $p += $delta) {
+        socket($sock, AF_INET, SOCK_STREAM, getprotobyname('tcp') || 0) ||
             croak "Net::SSH: Can't create socket: $!";
+        last if not $p or bind($sock, sockaddr_in($p,$addr));
+        if ($! =~ /Address already in use/i) {
+            close($sock);
+            next;
+        }
+        croak "Net::SSH: Can't bind socket to port $p: $!";
     }
+	if($p) {
+		$ssh->debug("Allocated local port $p.");
+		$ssh->{config}->set('localport', $p);
+	}
+
     $sock;
 }
 

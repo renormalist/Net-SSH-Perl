@@ -1,12 +1,25 @@
 Revision history for Net::SSH::Perl
 
+1.27  2005.02.06
+    - Set socket to non-blocking in more portable manner (rt.cpan.org #6728).
+    - Default port to 22 in case service list is not available (rt.cpan.org
+      #5924, Gavin Brock).
+    - Allow Net::SSH::Ciphers::supported to take a protocol option to get
+      SSH2 ciphers (rt.cpan.org #4648, dan at midstream.com), and also change
+      Net::SSH::Perl::Kex to map SSH1 names to SSH2 names.
+    - Support BindAddress (bind to specific IP) (rt.cpan.org #6725, patch from
+      matt at katipo.co.nz).
+    - Have Makefile.PL only generate the prerequisites list, and not try to
+      install any (let the install shell handle it); this allows compatibility
+      with CPANPLUS and sudo installs (rt.cpan.org #6835, Michael Schwern).
+
 1.26  2005.01.18
     - New co-maintainer, David Robins (DBROBINS).
     - Fix Math::Pari large integer leak in Net::SSH::Perl::Util::SSH2MP bin2mp
       function (has been brought to the attention of the Math::Pari maintainer
       since it's probably a Math::Pari problem, but fixed here because it's a
       big win for a small change and the same "fix" is already in mp2bin).
-	- Require perl 5.6 in Makefile.PL (was '5.0006' change to '5.006').
+    - Require perl 5.6 in Makefile.PL (was '5.0006' change to '5.006').
 
 1.25  2004.01.19
     - Fix a bizarre test failure in 03-packet.t if String::CRC32 isn't
@@ -420,3 +433,5 @@ Revision history for Net::SSH::Perl
 
 0.01  2001.01.10
     - original version; created by h2xs 1.19
+
+# vim:et

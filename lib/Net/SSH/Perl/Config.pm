@@ -1,4 +1,4 @@
-# $Id: Config.pm,v 1.18 2001/07/10 23:40:06 btrott Exp $
+# $Id: Config.pm,v 1.19 2005/02/05 06:33:21 dbrobins Exp $
 
 package Net::SSH::Perl::Config;
 use strict;
@@ -8,6 +8,7 @@ use vars qw( %DIRECTIVES $AUTOLOAD );
 use Carp qw( croak );
 
 %DIRECTIVES = (
+    BindAddress             => [ \&_set_str, 'bind_address' ],
     Host                    => [ \&_host ],
     BatchMode               => [ \&_batch_mode ],
     ChallengeResponseAuthentication => [ \&_set_str, 'auth_ch_res' ],

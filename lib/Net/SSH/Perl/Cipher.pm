@@ -1,4 +1,4 @@
-# $Id: Cipher.pm,v 1.10 2001/04/17 18:27:45 btrott Exp $
+# $Id: Cipher.pm,v 1.11 2005/02/05 06:33:20 dbrobins Exp $
 
 package Net::SSH::Perl::Cipher;
 
@@ -95,7 +95,14 @@ sub supported {
     unless (keys %SUPPORTED) {
         _determine_supported();
     }
-    return [ keys %SUPPORTED ] unless @_;
+	my $protocol = 1;
+	shift, $protocol = shift
+		if not ref $_[0] and $_[0] and $_[0] eq 'protocol';
+	unless(@_) {
+		return [ keys %SUPPORTED ] unless 2 == $protocol;
+		return [ grep $SUPPORTED{$_}, map $CIPHERS{$_}, values %CIPHERS_SSH2 ];
+	}
+
     my $id = ref $_[0] ? shift->id : shift;
     return $id == 0 || exists $SUPPORTED{$id} unless @_;
     my $ssupp = shift;
@@ -135,12 +142,13 @@ functions or object methods.
 
 =head1 UTILITY METHODS
 
-=head2 supported( [ $ciph_id [, $server_supports ] ])
+=head2 supported( [ protocol => $protocol, ] [ $ciph_id [, $server_supports ] ])
 
-Without arguments, returns a reference to an array of
+Without arguments returns a reference to an array of
 ciphers supported by I<Net::SSH::Perl>. These are ciphers
 that have working Net::SSH::Perl::Cipher:: implementations,
-essentially.
+essentially.  Pass 'protocol => 2' to get a list of
+SSH2 ciphers.
 
 With one argument I<$ciph_id>, returns a true value if
 that cipher is supported by I<Net::SSH::Perl>, and false
