@@ -1,5 +1,13 @@
 Revision history for Net::SSH::Perl
 
+1.26  2005.01.18
+    - New co-maintainer, David Robins (DBROBINS).
+    - Fix Math::Pari large integer leak in Net::SSH::Perl::Util::SSH2MP bin2mp
+      function (has been brought to the attention of the Math::Pari maintainer
+      since it's probably a Math::Pari problem, but fixed here because it's a
+      big win for a small change and the same "fix" is already in mp2bin).
+	- Require perl 5.6 in Makefile.PL (was '5.0006' change to '5.006').
+
 1.25  2004.01.19
     - Fix a bizarre test failure in 03-packet.t if String::CRC32 isn't
       installed (the tests were testing SSH1 but we can't assume the

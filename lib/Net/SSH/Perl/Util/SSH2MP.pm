@@ -1,4 +1,4 @@
-# $Id: SSH2MP.pm,v 1.3 2001/06/03 23:40:32 btrott Exp $
+# $Id: SSH2MP.pm,v 1.4 2005/01/16 21:05:18 dbrobins Exp $
 
 package Net::SSH::Perl::Util::SSH2MP;
 use strict;
@@ -12,8 +12,9 @@ sub bitsize {
 sub bin2mp {
     my $s = shift;
     my $p = PARI(0);
+    my $base = PARI(256);
     for my $b (split //, $s) {
-        $p = $p * 256 + ord $b;
+        $p = $p * $base + ord $b;
     }
     $p;
 }

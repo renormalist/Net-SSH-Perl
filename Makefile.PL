@@ -1,9 +1,9 @@
-# $Id: Makefile.PL,v 1.25 2003/12/14 05:39:29 autarch Exp $
+# $Id: Makefile.PL,v 1.26 2005/01/16 21:05:17 dbrobins Exp $
 
 use ExtUtils::MakeMaker qw( prompt WriteMakefile );
 use strict;
 
-use 5.0006;
+use 5.006;
 
 my $is_sdk = 0;
 for my $arg (@ARGV) {

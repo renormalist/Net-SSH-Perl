@@ -1,4 +1,4 @@
-$Id: README,v 1.20 2001/06/03 22:30:33 btrott Exp $
+$Id: README,v 1.22 2005/01/18 18:02:16 autarch Exp $
 
 This is Net::SSH::Perl. It contains implementations of
 both the SSH1 and SSH2 protocols.
@@ -41,7 +41,7 @@ your CPAN shell is set up, you should just be able to do
 If you don't like that, you can download the distribution; the
 latest version on CPAN can be found in
 
-    ftp://ftp.cpan.org/pub/CPAN/authors/id/B/BT/BTROTT/
+	ftp://ftp.cpan.org/pub/CPAN/authors/id/D/DB/DBROBINS/
 
 Download it, unpack it, then build it as per the usual:
 
@@ -92,4 +92,4 @@ Both pssh and pscp support a subset of the command line options
 that the actual tools support; obviously, only those options
 supported by Net::SSH::Perl are supported by the two scripts.
 
-Benjamin Trott / ben@rhumba.pair.com
+David Robins / dbrobins@cpan.org

@@ -1,4 +1,4 @@
-# $Id: Perl.pm,v 1.113 2004/01/19 19:15:36 autarch Exp $
+# $Id: Perl.pm,v 1.115 2005/01/18 18:08:25 autarch Exp $
 
 package Net::SSH::Perl;
 use strict;
@@ -22,7 +22,7 @@ eval {
     $HOSTNAME = hostname();
 };
 
-$VERSION = '1.25';
+$VERSION = '1.26';
 
 sub VERSION { $VERSION }
 
@@ -859,15 +859,18 @@ https://rt.cpan.org/NoAuth/ReportBug.html?Queue=net%3A%3Assh%3A%3Aperl
 
 =head1 AUTHOR
 
-Current maintainer is Dave Rolsky, autarch@urth.org.
+Current maintainer is David Robins, dbrobins@cpan.org.
+
+Previous maintainer was Dave Rolsky, autarch@urth.org.
 
 Originally written by Benjamin Trott.
 
 =head1 COPYRIGHT
 
-Copyright (c) 2001 Benjamin Trott, Copyright (c) 2003 David Rolsky.
-All rights reserved.  This program is free software; you can
-redistribute it and/or modify it under the same terms as Perl itself.
+Copyright (c) 2001-2003 Benjamin Trott, Copyright (c) 2003-2004 David
+Rolsky.  Copyright (c) David Robins.  All rights reserved.  This
+program is free software; you can redistribute it and/or modify it
+under the same terms as Perl itself.
 
 The full text of the license can be found in the LICENSE file included
 with this module.

@@ -1,13 +1,26 @@
 # http://module-build.sourceforge.net/META-spec.html
 #XXXXXXX This is a prototype!!!  It will change in the future!!! XXXXX#
 name:         Net-SSH-Perl
-version:      1.25
+version:      1.26
 version_from: lib/Net/SSH/Perl.pm
 installdirs:  site
 requires:
+    Convert::PEM:                  0.05
     Crypt::Blowfish:               0
     Crypt::DES:                    0
+    Crypt::DH:                     0.01
+    Crypt::DSA:                    0.11
     Crypt::IDEA:                   0
+    Digest::HMAC_MD5:              0
+    Digest::HMAC_SHA1:             0
+    Digest::MD5:                   0
+    Digest::SHA1:                  0
+    IO::Socket:                    0
+    Math::GMP:                     1.04
+    Math::Pari:                    2.001804
+    MIME::Base64:                  0
+    Scalar::Util:                  0
+    String::CRC32:                 1.2
 
 distribution_type: module
 generated_by: ExtUtils::MakeMaker version 6.17
