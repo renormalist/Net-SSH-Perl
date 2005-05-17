@@ -13,6 +13,7 @@ use Net::SSH::Perl::Util qw( :hosts _read_yes_or_no );
 use vars qw( $VERSION $CONFIG $HOSTNAME );
 $CONFIG = {};
 
+use IO::Socket;
 use Socket;
 use Fcntl;
 use Symbol;
@@ -22,7 +23,7 @@ eval {
     $HOSTNAME = hostname();
 };
 
-$VERSION = '1.27';
+$VERSION = '1.28';
 
 sub VERSION { $VERSION }
 
@@ -259,7 +260,15 @@ sub sock { $_[0]->{session}{sock} }
 sub _exchange_identification {
     my $ssh = shift;
     my $sock = $ssh->{session}{sock};
+
+    # fix for a bad server (F-SECURE 3.2.0) that can emit a warning message
+    my $tries = 3;
     my $remote_id = <$sock>;
+    while(defined($remote_id) and $remote_id !~ /^SSH-/ and --$tries) {
+        $ssh->debug("Remote_id $remote_id");
+        $remote_id = <$sock>
+     }
+
     ($ssh->{server_version_string} = $remote_id) =~ s/\cM?\n$//;
     my($remote_major, $remote_minor, $remote_version) = $remote_id =~
         /^SSH-(\d+)\.(\d+)-([^\n]+)\n$/;
