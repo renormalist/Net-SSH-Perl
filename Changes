@@ -1,10 +1,19 @@
 Revision history for Net::SSH::Perl
 
+1.29  2005.10.08
+    - Require Digest::SHA1 2.10 or greater (fixed problem with BSD connection)
+      (Adam Callis).
+    - Add suppress_shell SSH2 option for SFTP (Sean McMillan).
+    - Use effective (not real) user-id to detect root (David Wheeler,
+      rt.cpan.org #13373).
+    - Make "ChallengeResponseAuthentication" configuration item boolean rather
+      than string (mark AT blackmans.org, rt.cpan.org #14549).
+
 1.28  2005.03.17
     - Patch to skip warning messages emitted by F-Secure sshd before the SSH
       signature (Neal Ley).
     - Fix for "Can't locate object method "blocking" via package "IO::Handle""
-      error (rt.cpan.org #11674, "Dan").
+      error (rt.cpan.org #11674, Daniel C. Silverstein (dans AT pch.net)).
 
 1.27  2005.02.06
     - Set socket to non-blocking in more portable manner (rt.cpan.org #6728).

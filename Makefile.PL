@@ -1,4 +1,4 @@
-# $Id: Makefile.PL,v 1.27 2005/02/07 02:44:21 dbrobins Exp $
+# $Id: Makefile.PL,v 1.28 2005/02/20 19:56:02 dbrobins Exp $
 
 use strict;
 use 5.006;
@@ -17,7 +17,7 @@ my %SSH_PREREQ = (
     },
 
     2 => {
-        'Digest::SHA1'      => 0,
+        'Digest::SHA1'      => '2.10',
         'Digest::HMAC_MD5'  => 0,
         'Digest::HMAC_SHA1' => 0,
         'Crypt::DSA'        => '0.11',

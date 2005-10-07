@@ -1,4 +1,4 @@
-# $Id: Perl.pm,v 1.116 2005/02/05 06:33:19 dbrobins Exp $
+# $Id: Perl.pm,v 1.118 2005/10/04 05:12:04 dbrobins Exp $
 
 package Net::SSH::Perl;
 use strict;
@@ -13,7 +13,6 @@ use Net::SSH::Perl::Util qw( :hosts _read_yes_or_no );
 use vars qw( $VERSION $CONFIG $HOSTNAME );
 $CONFIG = {};
 
-use IO::Socket;
 use Socket;
 use Fcntl;
 use Symbol;
@@ -23,7 +22,7 @@ eval {
     $HOSTNAME = hostname();
 };
 
-$VERSION = '1.28';
+$VERSION = '1.29';
 
 sub VERSION { $VERSION }
 
@@ -97,8 +96,8 @@ sub server_version_string { $_[0]->{server_version_string} }
 
 sub _current_user {
     my $user;
-    eval { $user = scalar getpwuid($<) };
-    $user;
+    eval { $user = scalar getpwuid $> };
+    return $user;
 }
 
 sub _init {
@@ -260,15 +259,7 @@ sub sock { $_[0]->{session}{sock} }
 sub _exchange_identification {
     my $ssh = shift;
     my $sock = $ssh->{session}{sock};
-
-    # fix for a bad server (F-SECURE 3.2.0) that can emit a warning message
-    my $tries = 3;
     my $remote_id = <$sock>;
-    while(defined($remote_id) and $remote_id !~ /^SSH-/ and --$tries) {
-        $ssh->debug("Remote_id $remote_id");
-        $remote_id = <$sock>
-     }
-
     ($ssh->{server_version_string} = $remote_id) =~ s/\cM?\n$//;
     my($remote_major, $remote_minor, $remote_version) = $remote_id =~
         /^SSH-(\d+)\.(\d+)-([^\n]+)\n$/;
@@ -610,7 +601,7 @@ directives in the format used in the config file. For example:
 
 =back
 
-=head2 $ssh->login([ $user [, $password ] ])
+=head2 $ssh->login([ $user [, $password [, $suppress_shell ] ] ])
 
 Sets the username and password to be used when authenticating
 with the I<sshd> daemon. The username I<$user> is required for
@@ -623,6 +614,12 @@ authentication (it's not used for passphrases on encrypted
 RSA/DSA identity files, though perhaps it should be). And if you're
 running in an interactive session and you've not provided a
 password, you'll be prompted for one.
+
+By default, Net::SSH::Perl will open a channel with a shell
+on it. This is usually what you want. If you are tunneling
+another protocol over SSH, however, you may want to
+prevent this behavior.  Passing a true value in I<$suppress_shell>
+will prevent the shell channel from being opened (SSH2 only).
 
 =head2 ($out, $err, $exit) = $ssh->cmd($cmd, [ $stdin ])
 

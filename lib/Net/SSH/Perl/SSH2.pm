@@ -1,4 +1,4 @@
-# $Id: SSH2.pm,v 1.34 2001/10/04 20:29:08 btrott Exp $
+# $Id: SSH2.pm,v 1.37 2005/10/08 21:04:24 dbrobins Exp $
 
 package Net::SSH::Perl::SSH2;
 use strict;
@@ -12,9 +12,8 @@ use Net::SSH::Perl::Constants qw( :protocol :msg2
 use Net::SSH::Perl::Cipher;
 use Net::SSH::Perl::AuthMgr;
 use Net::SSH::Perl::Comp;
-use Net::SSH::Perl::Util qw( :hosts );
+use Net::SSH::Perl::Util qw(:hosts);
 
-use Net::SSH::Perl;
 use base qw( Net::SSH::Perl );
 
 use Carp qw( croak );
@@ -63,6 +62,7 @@ sub register_handler {
 sub login {
     my $ssh = shift;
     $ssh->SUPER::login(@_);
+    my $suppress_shell = $_[2];
     $ssh->_login or $ssh->fatal_disconnect("Permission denied");
 
     $ssh->debug("Login completed, opening dummy shell channel.");
@@ -76,8 +76,10 @@ sub login {
         SSH2_MSG_CHANNEL_OPEN_CONFIRMATION);
     $cmgr->input_open_confirmation($packet);
 
-    $ssh->debug("Got channel open confirmation, requesting shell.");
-    $channel->request("shell", 0);
+    unless ($suppress_shell) {
+        $ssh->debug("Got channel open confirmation, requesting shell.");
+        $channel->request("shell", 0);
+    }
 }
 
 sub _login {

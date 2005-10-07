@@ -1,4 +1,4 @@
-# $Id: Config.pm,v 1.19 2005/02/05 06:33:21 dbrobins Exp $
+# $Id: Config.pm,v 1.20 2005/10/04 05:12:04 dbrobins Exp $
 
 package Net::SSH::Perl::Config;
 use strict;
@@ -11,7 +11,7 @@ use Carp qw( croak );
     BindAddress             => [ \&_set_str, 'bind_address' ],
     Host                    => [ \&_host ],
     BatchMode               => [ \&_batch_mode ],
-    ChallengeResponseAuthentication => [ \&_set_str, 'auth_ch_res' ],
+    ChallengeResponseAuthentication => [ \&_set_yesno, 'auth_ch_res' ],
     Cipher                  => [ \&_cipher ],
     Ciphers                 => [ \&_set_str, 'ciphers' ],
     Compression             => [ \&_set_yesno, 'compression' ],
