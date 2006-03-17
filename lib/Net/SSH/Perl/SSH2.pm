@@ -1,4 +1,4 @@
-# $Id: SSH2.pm,v 1.37 2005/10/08 21:04:24 dbrobins Exp $
+# $Id: SSH2.pm,v 1.38 2005/10/12 00:57:31 dbrobins Exp $
 
 package Net::SSH::Perl::SSH2;
 use strict;
@@ -259,11 +259,12 @@ sub open2 {
 
     $ssh->client_loop;
 
-    local(*READ, *WRITE);
-    tie *READ, 'Net::SSH::Perl::Handle::SSH2', 'r', $channel, \$exit;
-    tie *WRITE, 'Net::SSH::Perl::Handle::SSH2', 'w', $channel, \$exit;
-
-    (\*READ, \*WRITE);
+    my $read = Symbol::gensym;
+    my $write = Symbol::gensym;
+    tie *$read, 'Net::SSH::Perl::Handle::SSH2', 'r', $channel, \$exit;
+    tie *$write, 'Net::SSH::Perl::Handle::SSH2', 'w', $channel, \$exit;
+ 
+    return ($read, $write);
 }
 
 sub break_client_loop { $_[0]->{_cl_quit_pending} = 1 }

@@ -19,6 +19,7 @@ sub _check_host_in_hostfile {
     while (<FH>) {
         chomp;
         my($hosts, $keyblob) = split /\s+/, $_, 2;
+        next unless $hosts and $keyblob;
         my $fkey;
         ## Trap errors for unsupported key types (eg. if
         ## known_hosts has an entry for an ssh-rsa key, and

@@ -1,4 +1,4 @@
-# $Id: SSH1.pm,v 1.20 2001/07/19 06:17:04 btrott Exp $
+# $Id: SSH1.pm,v 1.21 2005/10/12 00:57:31 dbrobins Exp $
 
 package Net::SSH::Perl::SSH1;
 use strict;
@@ -325,12 +325,13 @@ sub open2 {
         $packet->send;
     }
 
-    local(*READ, *WRITE);
-    tie *READ, 'Net::SSH::Perl::Handle::SSH1', 'r', $ssh;
-    tie *WRITE, 'Net::SSH::Perl::Handle::SSH1', 'w', $ssh;
+    my $read = Symbol::gensym;
+    my $write = Symbol::gensym;
+    tie *$read, 'Net::SSH::Perl::Handle::SSH1', 'r', $ssh;
+    tie *$write, 'Net::SSH::Perl::Handle::SSH1', 'w', $ssh;
 
     $ssh->debug("Entering interactive session.");
-    (\*READ, \*WRITE);
+    return ($read, $write);
 }
 
 sub break_client_loop { $_[0]->{_cl_quit_pending} = 1 }

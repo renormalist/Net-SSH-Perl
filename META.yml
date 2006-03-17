@@ -1,13 +1,11 @@
 # http://module-build.sourceforge.net/META-spec.html
 #XXXXXXX This is a prototype!!!  It will change in the future!!! XXXXX#
 name:         Net-SSH-Perl
-version:      1.29
+version:      1.30
 version_from: lib/Net/SSH/Perl.pm
 installdirs:  site
 requires:
     Convert::PEM:                  0.05
-    Crypt::Blowfish:               0
-    Crypt::DES:                    0
     Crypt::DH:                     0.01
     Crypt::DSA:                    0.11
     Crypt::IDEA:                   0
