@@ -1,4 +1,4 @@
-# $Id: Util.pm,v 1.28 2001/06/05 01:09:18 btrott Exp $
+# $Id: Util.pm,v 1.29 2008/10/02 20:46:17 turnstep Exp $
 
 package Net::SSH::Perl::Util;
 use strict;
@@ -48,7 +48,7 @@ sub import {
     }
 
     my %loaded;
-    no strict 'refs';
+    no strict 'refs'; ## no critic
     for my $func (@to_export) {
         my $mod = join '::', __PACKAGE__, $FUNC_TO_MOD{$func};
         unless ($loaded{$mod}) {

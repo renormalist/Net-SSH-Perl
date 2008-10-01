@@ -1,4 +1,4 @@
-$Id: README,v 1.22 2005/01/18 18:02:16 autarch Exp $
+$Id: README,v 1.23 2008/10/02 18:53:54 turnstep Exp $
 
 This is Net::SSH::Perl. It contains implementations of
 both the SSH1 and SSH2 protocols.
@@ -39,9 +39,9 @@ your CPAN shell is set up, you should just be able to do
     % perl -MCPAN -e 'install Net::SSH::Perl'
 
 If you don't like that, you can download the distribution; the
-latest version on CPAN can be found in
+latest version on CPAN can be found at
 
-	ftp://ftp.cpan.org/pub/CPAN/authors/id/D/DB/DBROBINS/
+	http://search.cpan.org/dist/Net-SSH-Perl/
 
 Download it, unpack it, then build it as per the usual:
 

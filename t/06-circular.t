@@ -1,6 +1,9 @@
-# $Id: 06-circular.t,v 1.2 2003/12/03 15:35:21 autarch Exp $
+#!/usr/bin/perl
+
+# $Id: 06-circular.t,v 1.4 2008/10/02 20:46:44 turnstep Exp $
 
 use strict;
+use warnings;
 
 use Net::SSH::Perl;
 

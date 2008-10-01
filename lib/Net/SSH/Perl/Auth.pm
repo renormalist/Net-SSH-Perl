@@ -1,4 +1,4 @@
-# $Id: Auth.pm,v 1.8 2001/07/03 07:04:52 btrott Exp $
+# $Id: Auth.pm,v 1.9 2008/10/02 18:51:15 turnstep Exp $
 
 package Net::SSH::Perl::Auth;
 
@@ -192,7 +192,7 @@ RSA, then Rhosts-RSA, then Password authentication.
 Instantiates a new auth object of the type
 I<$auth_name>, and gives it the I<Net::SSH::Perl>
 object I<$ssh>, which should contain an open
-connetion to an sshd server.
+connection to an sshd server.
 
 Returns the auth object, which will be blessed into
 the actual auth subclass.
@@ -224,6 +224,8 @@ password (if required), etc.--should be in the I<$ssh>
 object.
 
 Returns 1 if the authentication is successful, 0 otherwise.
+
+=back
 
 =head1 AUTHOR & COPYRIGHTS
 

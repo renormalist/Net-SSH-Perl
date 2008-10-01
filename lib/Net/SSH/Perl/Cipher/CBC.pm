@@ -1,4 +1,4 @@
-# $Id: CBC.pm,v 1.5 2001/04/03 19:44:47 btrott Exp $
+# $Id: CBC.pm,v 1.6 2008/09/24 19:21:21 turnstep Exp $
 
 # This code is based in part on the Systemics Crypt::CBC.
 # Parts copyright (C) 1995, 1996 Systemics Ltd (http://www.systemics.com/)
@@ -26,7 +26,7 @@ sub encrypt {
     while (length $data) {
         my $in = substr($data, 0, $size, '') ^ $iv;
         $iv = $cbc->{cipher}->encrypt($in);
-	$retval .= $iv;
+        $retval .= $iv;
     }
 
     $cbc->{iv} = $iv;

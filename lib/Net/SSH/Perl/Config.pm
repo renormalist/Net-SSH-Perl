@@ -1,4 +1,4 @@
-# $Id: Config.pm,v 1.20 2005/10/04 05:12:04 dbrobins Exp $
+# $Id: Config.pm,v 1.22 2008/10/02 20:46:17 turnstep Exp $
 
 package Net::SSH::Perl::Config;
 use strict;
@@ -54,10 +54,10 @@ sub read_config {
 
     local $cfg->{_state} = { host => $cfg->{host}, host_matched => 1 };
 
-    local($_, $/, *FH);
+    local($_, $/);
     $/ = "\n";
-    open FH, $conf_file or return;
-    while (<FH>) {
+    open my $fh, '<', $conf_file or return;
+    while (<$fh>) {
         next if !/\S/ || /^#/;
         my($key, $args) = $_ =~ /^\s*(\S+)\s+(.+)$/;
         next unless $key && $args;
@@ -66,7 +66,7 @@ sub read_config {
         my $code = $DIRECTIVES{$key}[0] or next;
         $code->($cfg, $key, $args);
     }
-    close FH;
+    close $fh or warn qq{Could not close "$conf_file": $!\n};
 }
 
 sub merge_directive {
@@ -227,7 +227,7 @@ by the I<$cfg> object. If I<$file> is unreadable, simply
 returns quietly.
 
 As stated above, values read from the configuration files
-are overriden by those passed in to the constructor.
+are overridden by those passed in to the constructor.
 Furthermore, if you're reading from several config files
 in sequence, values read from the first files will override
 those read from the second, third, fourth, etc. files.

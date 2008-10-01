@@ -1,20 +1,19 @@
-#!/usr/bin/perl -w
+#!/usr/bin/perl
 
 use strict;
+use warnings;
 
 use Test::More;
 
 BEGIN
 {
-    eval "require String::CRC32";
-    if ($@)
-    {
-        plan skip_all => "Can't do packet tests without String::CRC32";
-    }
-    else
-    {
-        plan tests => 10;
-    }
+    eval 'require String::CRC32';
+    $@ and plan skip_all => 'Cannot do packet tests without String::CRC32';
+
+	eval 'require Math::GMP';
+	$@ and plan skip_all => 'Cannot test protocol 1 packets without Math::GMP';
+
+	plan tests => 10;
 }
 
 use Net::SSH::Perl;
@@ -98,8 +97,9 @@ $ssh->{session}{sock} = $fh;
     # This needs to be reasonably high in order to avoid interfering
     # with real handles that might be open.  With Test::More in use
     # (which dups some handles), we're likely to have as many as 8
-    # real handles open, if note more
-    sub FILENO { 255 }
+    # real handles open, if not more
+	# However, too high and we run into problems with the shell
+    sub FILENO { 25 }
 
     sub READ
     {

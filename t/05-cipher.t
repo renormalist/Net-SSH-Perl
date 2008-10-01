@@ -1,6 +1,9 @@
-# $Id: 05-cipher.t,v 1.2 2001/03/12 19:40:03 btrott Exp $
+#!/usr/bin/perl
+
+# $Id: 05-cipher.t,v 1.4 2008/10/02 20:46:44 turnstep Exp $
 
 use strict;
+use warnings;
 
 use vars qw( $CFG_FILE );
 BEGIN { unshift @INC, 't/' }

@@ -1,4 +1,4 @@
-# $Id: Zlib.pm,v 1.2 2001/04/18 06:26:10 btrott Exp $
+# $Id: Zlib.pm,v 1.3 2008/10/02 20:46:17 turnstep Exp $
 
 package Net::SSH::Perl::Comp::Zlib;
 
@@ -38,7 +38,7 @@ sub compress {
         $compressed = $output . $out;
     }
     croak "Error while compressing: $err" unless defined $compressed;
-    $compressed;    
+    $compressed;
 }
 
 sub uncompress {
@@ -55,7 +55,7 @@ sub uncompress {
     }
     croak "Error while inflating: $err"
         unless defined $inflated;
-    $inflated;    
+    $inflated;
 }
 
 1;

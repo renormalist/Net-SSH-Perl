@@ -1,17 +1,25 @@
 Revision history for Net::SSH::Perl
 
-1.30  2006.03.17
+1.31 
+
+    - New co-maintainer, Greg Sabino Mullane (TURNSTEP).
+    - Prevent t/03-packet.t from hanging due to high file descriptor.
+      (altblue at n0i.net, rt.cpan.org #6101)
+    - Skip some tests if Math::GMP not installed (e.g. from choosing only 
+      protocol 2 in Makefile.PL) (Greg Sabino Mullane, reported in 
+      rt.cpan.org #25152)
+    - If ENV{HOME} is not set, use getpwuid. If both fail and the dir 
+      is needed, we croak. (Greg Sabino Mullane, expanded from patch 
+      by dgehl at inverse.ca in rt.cpan.org #25174)
+    - Fix incorrect logical/bitwise AND mixup (Peter.Haydon at uk.fujitsu.com, 
+      rt.cpan.org #31490)
+    - Allow empty stdin for SSH2 (rcp at rcable.co.uk, rt.cpan.org #32730)
+    - Adjust terminal dimensions dynamically if Term::ReadKey is available
+      (john at sackheads.org, rt.cpan.org #34874)
+
+1.30  2005.10.12
     - Fix for local *READ/*WRITE tie problem in open2 function (Bas van
       Sisseren).
-    - Add back 'use IO::Socket' to fix 'Can't locate object method "blocking"
-      via package "IO::Handle"' error (rt.cpan.org #15102).
-    - Allow "The socket is already in use" as well as "Address already in use"
-      to detect port already in use (for AIX, rt.cpan.org #16301).
-    - Use sysread (not <>) to read the version string to avoid mixing read
-      types and allow pre-version data (fix by Denis Bider, rt.cpan.org #14812).
-    - Fix warnings on empty hostfile lines (fix by JOHANL, rt.cpan.org #13750).
-    - Get the user's home directory from getpwuid() if the HOME environment
-      variable isn't set (rt.cpan.org #13434).
 
 1.29  2005.10.08
     - Require Digest::SHA1 2.10 or greater (fixed problem with BSD connection)
@@ -176,7 +184,7 @@ Revision history for Net::SSH::Perl
       context and state during authentication negotiation and
       setup, and dispatches to appropriate functions based on
       packet types.
-    - KeyBoardInt auth now uses new AuthMgr::register_handler
+    - KeyboardInt auth now uses new AuthMgr::register_handler
       method.
     - pssh-keygen now changes permissions of private key file
       to 0600 on key generation.

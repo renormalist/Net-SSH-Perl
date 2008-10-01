@@ -1,4 +1,4 @@
-# $Id: AuthMgr.pm,v 1.6 2003/12/03 15:35:21 autarch Exp $
+# $Id: AuthMgr.pm,v 1.7 2008/10/02 20:46:17 turnstep Exp $
 
 package Net::SSH::Perl::AuthMgr;
 use strict;
@@ -20,7 +20,8 @@ use Scalar::Util qw(weaken);
 use vars qw( %AUTH_MAP );
 %AUTH_MAP = ( password => 'Password',
               publickey => 'PublicKey',
-             'keyboard-interactive' => 'KeyboardInt' );
+             'keyboard-interactive' => 'KeyboardInt',
+			 );
 
 sub new {
     my $class = shift;

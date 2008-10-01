@@ -1,4 +1,4 @@
-# $Id: Authfile.pm,v 1.5 2001/07/11 21:57:37 btrott Exp $
+# $Id: Authfile.pm,v 1.6 2008/10/02 20:46:17 turnstep Exp $
 
 package Net::SSH::Perl::Util::Authfile;
 use strict;
@@ -18,10 +18,9 @@ sub _load_private_key {
     my($key_file, $passphrase, $want_public) = @_;
     $passphrase ||= '';
 
-    local *FH;
-    open FH, $key_file or croak "Can't open $key_file: $!";
-    my $c = do { local $/; <FH> };
-    close FH or die "Can't close $key_file: $!";
+    open my $fh, '<', $key_file or croak "Can't open $key_file: $!";
+    my $c = do { local $/; <$fh> };
+    close $fh or die "Can't close $key_file: $!";
     ($c) = $c =~ /(.*)/s;  ## Untaint data. Anything is allowed.
 
     my $buffer = Net::SSH::Perl::Buffer->new( MP => 'SSH1' );
@@ -108,10 +107,9 @@ sub _save_private_key {
         Net::SSH::Perl::Cipher->new_from_key_str($cipher_type, $passphrase);
     $encrypted->append( $cipher->encrypt($buffer->bytes) );
 
-    local *FH;
-    open FH, ">$key_file" or croak "Can't open $key_file: $!";
-    print FH $encrypted->bytes;
-    close FH or croak "Can't close $key_file: $!";
+    open my $fh, '>', $key_file or croak "Can't open $key_file: $!";
+    print $fh $encrypted->bytes;
+    close $fh or croak "Can't close $key_file: $!";
 }
 
 1;

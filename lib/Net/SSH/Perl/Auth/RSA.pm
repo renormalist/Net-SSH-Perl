@@ -1,4 +1,4 @@
-# $Id: RSA.pm,v 1.16 2003/12/03 15:35:21 autarch Exp $
+# $Id: RSA.pm,v 1.17 2008/10/02 20:46:17 turnstep Exp $
 
 package Net::SSH::Perl::Auth::RSA;
 
@@ -48,7 +48,7 @@ sub _try_agent {
     return unless my $agent = Net::SSH::Perl::Agent->new(1);
 
     my $iter = $agent->identity_iterator;
-    while(my($key, $comment) = $iter->()) {;
+    while(my($key, $comment) = $iter->()) {
         $ssh->debug("Trying RSA authentication via agent with '$comment'");
         $ssh->debug("Server refused our key."), next unless
             my $packet = $auth->_server_likes_key($key);

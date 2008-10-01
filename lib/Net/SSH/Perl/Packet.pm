@@ -1,4 +1,4 @@
-# $Id: Packet.pm,v 1.24 2003/12/20 04:39:25 autarch Exp $
+# $Id: Packet.pm,v 1.25 2008/09/24 19:21:20 turnstep Exp $
 
 package Net::SSH::Perl::Packet;
 
@@ -73,7 +73,7 @@ sub read_poll {
     }
     else {
         $packet = $class->read_poll_ssh1($ssh);
-	($debug, $ignore) = (SSH_MSG_DEBUG, SSH_MSG_IGNORE);
+        ($debug, $ignore) = (SSH_MSG_DEBUG, SSH_MSG_IGNORE);
     }
     return unless $packet;
 

@@ -1,4 +1,4 @@
-# $Id: Buffer.pm,v 1.13 2001/07/11 21:57:26 btrott Exp $
+# $Id: Buffer.pm,v 1.14 2008/10/02 20:46:17 turnstep Exp $
 
 package Net::SSH::Perl::Buffer;
 use strict;
@@ -142,7 +142,7 @@ sub _get_mp_int_ssh1 {
     my $off = defined $_[0] ? shift : $buf->{offset};
     my $bits = unpack "n", $buf->bytes($off, 2);
     my $bytes = int(($bits + 7) / 8);
-    my $hex = join '', map { sprintf "%02x", ord } split //, 
+    my $hex = join '', map { sprintf "%02x", ord } split //,
         $buf->bytes($off+2, $bytes);
     $buf->{offset} += 2 + $bytes;
     Math::GMP->new("0x$hex");

@@ -1,4 +1,4 @@
-# $Id: PublicKey.pm,v 1.20 2003/12/03 15:35:21 autarch Exp $
+# $Id: PublicKey.pm,v 1.21 2008/09/25 20:53:48 turnstep Exp $
 
 package Net::SSH::Perl::Auth::PublicKey;
 
@@ -73,6 +73,7 @@ sub _auth_identity {
     my $ssh = $auth->{ssh};
     my($packet);
 
+	## Revisit per bug 32190
     return unless -e $auth_file;
 
     my($key);

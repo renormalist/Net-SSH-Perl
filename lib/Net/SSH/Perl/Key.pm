@@ -1,4 +1,4 @@
-# $Id: Key.pm,v 1.19 2001/07/11 21:57:26 btrott Exp $
+# $Id: Key.pm,v 1.20 2008/10/02 20:46:17 turnstep Exp $
 
 package Net::SSH::Perl::Key;
 use strict;
@@ -45,7 +45,7 @@ sub extract_public {
 }
 
 BEGIN {
-    no strict 'refs';
+    no strict 'refs'; ## no critic
     for my $meth (qw( read_private keygen )) {
         *$meth = sub {
             my $class = shift;
@@ -69,10 +69,9 @@ use vars qw( %OBJ_MAP );
 sub read_private_pem {
     my $class = shift;
     my $keyfile = $_[0];
-    local *FH;
-    open FH, $keyfile or return;
-    chomp(my $desc = <FH>);
-    close FH;
+    open my $fh, '<', $keyfile or return;
+    chomp(my $desc = <$fh>);
+    close $fh or warn qq{Could not close "$keyfile": $!\n};
     return unless $desc;
     my($object) = $desc =~ /^-----?\s?BEGIN ([^\n\-]+)\s?-?----$/;
     $object =~ s/\s*$//;

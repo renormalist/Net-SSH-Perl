@@ -31,6 +31,8 @@ lib/Net/SSH/Perl/Comp.pm
 lib/Net/SSH/Perl/Comp/Zlib.pm
 lib/Net/SSH/Perl/Config.pm
 lib/Net/SSH/Perl/Constants.pm
+lib/Net/SSH/Perl/Handle.pm
+lib/Net/SSH/Perl/Handle.pm
 lib/Net/SSH/Perl/Handle/SSH1.pm
 lib/Net/SSH/Perl/Handle/SSH2.pm
 lib/Net/SSH/Perl/Kex.pm
@@ -43,6 +45,8 @@ lib/Net/SSH/Perl/Mac.pm
 lib/Net/SSH/Perl/Packet.pm
 lib/Net/SSH/Perl/SSH1.pm
 lib/Net/SSH/Perl/SSH2.pm
+lib/Net/SSH/Perl/Subsystem/Client.pm
+lib/Net/SSH/Perl/Subsystem/Server.pm
 lib/Net/SSH/Perl/Util.pm
 lib/Net/SSH/Perl/Util/Authfile.pm
 lib/Net/SSH/Perl/Util/Hosts.pm
@@ -51,18 +55,27 @@ lib/Net/SSH/Perl/Util/SSH1Misc.pm
 lib/Net/SSH/Perl/Util/SSH1MP.pm
 lib/Net/SSH/Perl/Util/SSH2MP.pm
 lib/Net/SSH/Perl/Util/Term.pm
+SIGNATURE
 LICENSE
 Makefile.PL
 MANIFEST
 MANIFEST.SKIP
 META.yml			Module meta-data (added by MakeMaker)
 README
+t/00-signature.t
 t/01-compile.t
 t/02-buffer.t
 t/03-packet.t
 t/04-config.t
 t/05-cipher.t
+t/06-auth.t
 t/06-circular.t
+t/99-perlcritic.t
+t/99-pod.t
+t/99-spellcheck.t
+t/99-yaml.t
 t/config
+t/psshd
 t/test-common.pl
 ToDo
+.perlcriticrc

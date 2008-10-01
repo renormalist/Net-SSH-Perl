@@ -1,12 +1,11 @@
-#!/usr/bin/perl -w
+#!/usr/bin/perl
 
 use strict;
+use warnings;
 
 use Test::More tests => 19;
 
 use Net::SSH::Perl::Buffer qw( SSH1 );
-
-use Math::GMP;
 
 my $buffer = Net::SSH::Perl::Buffer->new;
 
@@ -29,10 +28,21 @@ is( $buffer->get_int8, 2, 'get_int8 returns 2' );
 $buffer->put_char('a');
 is( $buffer->get_char, 'a', 'get_char returns "a"' );
 
-my $gmp = Math::GMP->new("999999999999999999999999999999");
-$buffer->put_mp_int($gmp);
-my $tmp = $buffer->get_mp_int;
-is( "$tmp", "$gmp", 'get_mp_int returns very large number' );
+eval {
+	require Math::GMP;
+	Math::GMP->import;
+};
+
+SKIP: {
+	if ($@) {
+		skip 'Math::GMP not installed',1;
+	}
+
+	my $gmp = Math::GMP->new("999999999999999999999999999999");
+	$buffer->put_mp_int($gmp);
+	my $tmp = $buffer->get_mp_int;
+	is( "$tmp", "$gmp", 'get_mp_int returns very large number' );
+}
 
 $buffer->empty;
 is( $buffer->offset, 0, 'offset is 0 after empty()' );

@@ -1,4 +1,4 @@
-# $Id: DSA.pm,v 1.23 2001/07/11 21:57:33 btrott Exp $
+# $Id: DSA.pm,v 1.24 2008/10/02 18:51:15 turnstep Exp $
 
 package Net::SSH::Perl::Key::DSA;
 use strict;
@@ -13,6 +13,7 @@ use base qw( Net::SSH::Perl::Key );
 use MIME::Base64;
 use Crypt::DSA;
 use Crypt::DSA::Key;
+use Crypt::DSA::Signature;
 use Carp qw( croak );
 use Digest::SHA1 qw( sha1 );
 

@@ -1,4 +1,4 @@
-# $Id: Agent.pm,v 1.4 2001/07/11 21:57:26 btrott Exp $
+# $Id: Agent.pm,v 1.5 2008/10/02 20:46:17 turnstep Exp $
 
 package Net::SSH::Perl::Agent;
 use strict;
@@ -171,7 +171,7 @@ sub decrypt {
 
 sub close_socket {
     my $agent = shift;
-    close($agent->{sock});
+    close($agent->{sock}) or warn qq{Could not close socket: $!\n};
 }
 
 1;

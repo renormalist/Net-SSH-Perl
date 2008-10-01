@@ -1,4 +1,4 @@
-# $Id: Makefile.PL,v 1.28 2005/02/20 19:56:02 dbrobins Exp $
+# $Id: Makefile.PL,v 1.30 2008/10/02 18:53:25 turnstep Exp $
 
 use strict;
 use 5.006;
@@ -71,48 +71,49 @@ MSG
 
 my $i = 1;
 for my $ciph(sort { $a->[0] <=> $b->[0] } @cryptmod) {
-	printf "    [%d] %s\n", $i++, $ciph->[0];
+    printf "    [%d] %s\n", $i++, $ciph->[0];
 }
 my $c = prompt("\nEnter your choices, separated by spaces:", 1);
 print "\n";
 
 for my $id(split /\s+/, $c) {
-	next unless $cryptmod[$id-1]->[1];
-	$prereq{$cryptmod[$id-1]->[1]} = '0';
+    next unless $cryptmod[$id-1]->[1];
+    $prereq{$cryptmod[$id-1]->[1]} = '0';
 }
 
 print "Checking for optional modules\n\n";
 
 unless (have_module('Digest::BubbleBabble', 0.01)) {
-	print<<MSG, "\n";
+    print<<MSG, "\n";
 Digest::BubbleBabble is required if you want to generate bubble babble
 key fingerprints with pssh-keygen.
 MSG
 
-	if (read_yes_or_no("Would you like to install it? (y/n)", "y")) {
-		$prereq{'Digest::BubbleBabble'} = '0.01';
-	}
-	print "\n";
+    if (read_yes_or_no("Would you like to install it? (y/n)", "y")) {
+        $prereq{'Digest::BubbleBabble'} = '0.01';
+    }
+    print "\n";
 }
 
 unless (have_module('Crypt::RSA', 1.37)) {
-	print<<MSG, "\n";
+    print<<MSG, "\n";
 Crypt::RSA is required if you wish to use the ssh-rsa public
 key algorithm (ssh-dss is used by default).
 MSG
-	if (read_yes_or_no("Would you like to install it? (y/n)", "y")) {
-		$prereq{'Crypt::RSA'} = '1.37';
-	}
-	print "\n";
+    if (read_yes_or_no("Would you like to install it? (y/n)", "y")) {
+        $prereq{'Crypt::RSA'} = '1.37';
+    }
+    print "\n";
 }
 
 WriteMakefile(
-    NAME => 'Net::SSH::Perl',
-    DISTNAME => 'Net-SSH-Perl',
+    NAME         => 'Net::SSH::Perl',
+    DISTNAME     => 'Net-SSH-Perl',
     VERSION_FROM => 'lib/Net/SSH/Perl.pm',
     PREREQ_PM    => \%prereq,
-    AUTHOR => 'David Robins <dbrobins@cpan.org>',
-    ABSTRACT => 'Perl client interface to SSH',
+    AUTHOR       => 'David Robins <dbrobins@cpan.org>',
+    ABSTRACT     => 'Perl client interface to SSH',
+    NO_META      => 1,
 );
 
 sub read_yes_or_no {

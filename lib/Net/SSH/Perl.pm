@@ -1,4 +1,4 @@
-# $Id: Perl.pm,v 1.118 2005/10/04 05:12:04 dbrobins Exp $
+# $Id: Perl.pm,v 1.121 2008/10/02 20:46:17 turnstep Exp $
 
 package Net::SSH::Perl;
 use strict;
@@ -10,22 +10,19 @@ use Net::SSH::Perl::Constants qw( :protocol :compat :hosts );
 use Net::SSH::Perl::Cipher;
 use Net::SSH::Perl::Util qw( :hosts _read_yes_or_no );
 
-use vars qw($VERSION $CONFIG $HOSTNAME);
+use vars qw( $VERSION $CONFIG $HOSTNAME );
 $CONFIG = {};
 
-use IO::Socket;
-use IO::Select;
 use Socket;
 use Fcntl;
 use Symbol;
-use Errno qw(EAGAIN EWOULDBLOCK);
-use Carp qw(croak);
+use Carp qw( croak );
 use Sys::Hostname;
 eval {
     $HOSTNAME = hostname();
 };
 
-$VERSION = '1.30';
+$VERSION = '1.31';
 
 sub VERSION { $VERSION }
 
@@ -107,8 +104,7 @@ sub _init {
     my $ssh = shift;
 
     my %arg = @_;
-    my $home = $ENV{HOME} || (getpwuid($>))[7];
-    my $user_config = delete $arg{user_config} || "$home/.ssh/config";
+    my $user_config = delete $arg{user_config} || "$ENV{HOME}/.ssh/config";
     my $sys_config  = delete $arg{sys_config}  || "/etc/ssh_config";
 
     my $directives = delete $arg{options} || [];
@@ -223,7 +219,7 @@ sub _create_socket {
     my $ssh = shift;
     my $sock = gensym;
 
-	my ($p,$end,$delta) = (0,1,1);	# normally we use whatever port we can get
+	my ($p,$end,$delta) = (0,1,1); # normally we use whatever port we can get
    	   ($p,$end,$delta) = (1023,512,-1) if $ssh->{config}->get('privileged');
 
 	# allow an explicit bind address
@@ -236,8 +232,8 @@ sub _create_socket {
         socket($sock, AF_INET, SOCK_STREAM, getprotobyname('tcp') || 0) ||
             croak "Net::SSH: Can't create socket: $!";
         last if not $p or bind($sock, sockaddr_in($p,$addr));
-        if ($! =~ /(Address|The socket name is) already in use/i) {
-            close($sock);
+        if ($! =~ /Address already in use/i) {
+            close($sock) or warn qq{Could not close socket: $!\n};
             next;
         }
         croak "Net::SSH: Can't bind socket to port $p: $!";
@@ -260,47 +256,14 @@ sub fatal_disconnect {
 
 sub sock { $_[0]->{session}{sock} }
 
-sub _read_version_line {
-    my $ssh = shift;
-    my $sock = $ssh->{session}{sock};
-    my $line;
-    for(;;) {
-        my $s = IO::Select->new($sock);
-        my @ready = $s->can_read;
-        my $buf;
-        my $len = sysread($sock, $buf, 1);
-        unless(defined($len)) {
-            next if $! == EAGAIN || $! == EWOULDBLOCK;
-            croak "Read from socket failed: $!";
-        }
-        croak "Connection closed by remote host" if $len == 0;
-        $line .= $buf;
-        croak "Version line too long: $line"
-         if substr($line, 0, 4) eq "SSH-" and length($line) > 255;
-        croak "Pre-version line too long: $line" if length($line) > 4*1024;
-        return $line if $buf eq "\n";
-    }
-}
-
-sub _read_version {
-    my $ssh = shift;
-    my $line;
-    do {
-        $line = $ssh->_read_version_line;
-    } while (substr($line, 0, 4) ne "SSH-");
-    $ssh->debug("Remote version string: $line");
-    return $line;
-}
-
 sub _exchange_identification {
     my $ssh = shift;
     my $sock = $ssh->{session}{sock};
-    my $remote_id = $ssh->_read_version;
+    my $remote_id = <$sock>;
     ($ssh->{server_version_string} = $remote_id) =~ s/\cM?\n$//;
     my($remote_major, $remote_minor, $remote_version) = $remote_id =~
         /^SSH-(\d+)\.(\d+)-([^\n]+)\n$/;
-    $ssh->debug("Remote protocol version $remote_major.$remote_minor, ".
-     "remote software version $remote_version");
+    $ssh->debug("Remote protocol version $remote_major.$remote_minor, remote software version $remote_version");
 
     my $proto = $ssh->config->get('protocol');
     my($mismatch, $set_proto);
@@ -913,7 +876,7 @@ Originally written by Benjamin Trott.
 
 =head1 COPYRIGHT
 
-Copyright (c) 2001-2003 Benjamin Trott, Copyright (c) 2003-2004 David
+Copyright (c) 2001-2003 Benjamin Trott, Copyright (c) 2003-2008 David
 Rolsky.  Copyright (c) David Robins.  All rights reserved.  This
 program is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.

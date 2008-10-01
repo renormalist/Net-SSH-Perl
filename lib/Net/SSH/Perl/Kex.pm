@@ -1,4 +1,4 @@
-# $Id: Kex.pm,v 1.21 2005/02/05 06:33:21 dbrobins Exp $
+# $Id: Kex.pm,v 1.22 2008/09/24 19:21:20 turnstep Exp $
 
 package Net::SSH::Perl::Kex;
 use strict;
@@ -65,12 +65,12 @@ sub exchange {
         }
     }
     if (my $cs = $ssh->config->get('ciphers')) {
-		# SSH2 cipher names are different; for compatibility, we'll map
-		# valid SSH1 ciphers to the SSH2 equivalent names
-		if($ssh->protocol eq PROTOCOL_SSH2) {
-			my %ssh2_cipher = reverse %Net::SSH::Perl::Cipher::CIPHERS_SSH2;
-			$cs = join ',', map $ssh2_cipher{$_} || $_, split /,/, $cs;
-		}
+        # SSH2 cipher names are different; for compatibility, we'll map
+        # valid SSH1 ciphers to the SSH2 equivalent names
+        if($ssh->protocol eq PROTOCOL_SSH2) {
+            my %ssh2_cipher = reverse %Net::SSH::Perl::Cipher::CIPHERS_SSH2;
+            $cs = join ',', map $ssh2_cipher{$_} || $_, split /,/, $cs;
+        }
         $proposal[ PROPOSAL_CIPH_ALGS_CTOS ] =
         $proposal[ PROPOSAL_CIPH_ALGS_STOC ] = $cs;
     }

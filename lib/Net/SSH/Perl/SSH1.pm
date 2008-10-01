@@ -1,4 +1,4 @@
-# $Id: SSH1.pm,v 1.21 2005/10/12 00:57:31 dbrobins Exp $
+# $Id: SSH1.pm,v 1.23 2008/09/25 21:06:25 turnstep Exp $
 
 package Net::SSH::Perl::SSH1;
 use strict;
@@ -27,14 +27,17 @@ sub version_string {
 
 sub _proto_init {
     my $ssh = shift;
+    my $home = $ENV{HOME} || (getpwuid($>))[7];
     unless ($ssh->{config}->get('user_known_hosts')) {
-        $ssh->{config}->set('user_known_hosts', "$ENV{HOME}/.ssh/known_hosts");
+        defined $home or croak "Cannot determine home directory, please set the environment variable HOME";
+        $ssh->{config}->set('user_known_hosts', "$home/.ssh/known_hosts");
     }
     unless ($ssh->{config}->get('global_known_hosts')) {
         $ssh->{config}->set('global_known_hosts', "/etc/ssh_known_hosts");
     }
     unless (my $if = $ssh->{config}->get('identity_files')) {
-        $ssh->{config}->set('identity_files', [ "$ENV{HOME}/.ssh/identity" ]);
+        defined $home or croak "Cannot determine home directory, please set the environment variable HOME";
+        $ssh->{config}->set('identity_files', [ "$home/.ssh/identity" ]);
     }
 
     for my $a (qw( password rhosts rhosts_rsa rsa ch_res )) {
@@ -218,7 +221,20 @@ sub _setup_connection {
         $packet = $ssh->packet_start(SSH_CMSG_REQUEST_PTY);
         my($term) = $ENV{TERM} =~ /(\w+)/;
         $packet->put_str($term);
-        $packet->put_int32(0) for 1..4;
+        my $foundsize = 0;
+        if (eval "require Term::ReadKey") {
+            my @sz = Term::ReadKey::GetTerminalSize($ssh->sock);
+            if (defined $sz[0]) {
+                $foundsize = 1;
+                $packet->put_int32($sz[1]); # height
+                $packet->put_int32($sz[0]); # width
+                $packet->put_int32($sz[2]); # xpix
+                $packet->put_int32($sz[3]); # ypix
+            }
+        }
+        if (!$foundsize) {
+            $packet->put_int32(0) for 1..4;
+        }
         $packet->put_int8(0);
         $packet->send;
 

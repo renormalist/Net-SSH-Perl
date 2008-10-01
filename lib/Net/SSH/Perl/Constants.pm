@@ -1,4 +1,4 @@
-# $Id: Constants.pm,v 1.23 2001/07/03 07:04:52 btrott Exp $
+# $Id: Constants.pm,v 1.24 2008/10/02 20:46:17 turnstep Exp $
 
 package Net::SSH::Perl::Constants;
 use strict;
@@ -165,7 +165,7 @@ sub import {
             $item =~ s/^:// ? @{ $TAGS{$item} } : $item;
     }
 
-    no strict 'refs';
+    no strict 'refs'; ## no critic
     my $pkg = caller;
     for my $con (@to_export) {
         warn __PACKAGE__, " does not export the constant '$con'"

@@ -1,4 +1,4 @@
-# $Id: Hosts.pm,v 1.8 2001/05/11 01:05:24 btrott Exp $
+# $Id: Hosts.pm,v 1.9 2008/10/02 20:46:17 turnstep Exp $
 
 package Net::SSH::Perl::Util::Hosts;
 use strict;
@@ -10,16 +10,15 @@ use Carp qw( croak );
 sub _check_host_in_hostfile {
     my($host, $hostfile, $key) = @_;
     my $key_class = ref($key);
-    local *FH;
-    open FH, $hostfile or return HOST_NEW; # ssh returns HOST_NEW if
-                                           # the host file can't be opened
+
+	# ssh returns HOST_NEW if the host file can't be opened
+    open my $fh, '<', $hostfile or return HOST_NEW;
     local($_, $/);
     $/ = "\n";
     my($status, $match, $hosts) = (HOST_NEW);
-    while (<FH>) {
+    while (<$fh>) {
         chomp;
         my($hosts, $keyblob) = split /\s+/, $_, 2;
-        next unless $hosts and $keyblob;
         my $fkey;
         ## Trap errors for unsupported key types (eg. if
         ## known_hosts has an entry for an ssh-rsa key, and
@@ -31,7 +30,7 @@ sub _check_host_in_hostfile {
         for my $h (split /,/, $hosts) {
             if ($h eq $host) {
                 if ($key->equal($fkey)) {
-                    close FH;
+                    close $fh or warn qq{Could not close "$hostfile": $!\n};
                     return HOST_OK;
                 }
                 $status = HOST_CHANGED;
@@ -52,9 +51,9 @@ sub _add_host_to_hostfile {
                 or die "Can't create directory $dir: $!";
         }
     }
-    open FH, ">>" . $hostfile or croak "Can't write to $hostfile: $!";
-    print FH join(' ', $host, $key->dump_public), "\n";
-    close FH or croak "Can't close $hostfile: $!";
+    open my $fh, '>>', $hostfile or croak "Can't write to $hostfile: $!";
+    print $fh join(' ', $host, $key->dump_public), "\n";
+    close $fh or croak "Can't close $hostfile: $!";
 }
 
 1;

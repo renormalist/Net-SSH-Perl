@@ -1,4 +1,4 @@
-# $Id: Cipher.pm,v 1.11 2005/02/05 06:33:20 dbrobins Exp $
+# $Id: Cipher.pm,v 1.12 2008/09/24 19:21:20 turnstep Exp $
 
 package Net::SSH::Perl::Cipher;
 
@@ -95,13 +95,13 @@ sub supported {
     unless (keys %SUPPORTED) {
         _determine_supported();
     }
-	my $protocol = 1;
-	shift, $protocol = shift
-		if not ref $_[0] and $_[0] and $_[0] eq 'protocol';
-	unless(@_) {
-		return [ keys %SUPPORTED ] unless 2 == $protocol;
-		return [ grep $SUPPORTED{$_}, map $CIPHERS{$_}, values %CIPHERS_SSH2 ];
-	}
+    my $protocol = 1;
+    shift, $protocol = shift
+        if not ref $_[0] and $_[0] and $_[0] eq 'protocol';
+    unless(@_) {
+        return [ keys %SUPPORTED ] unless 2 == $protocol;
+        return [ grep $SUPPORTED{$_}, map $CIPHERS{$_}, values %CIPHERS_SSH2 ];
+    }
 
     my $id = ref $_[0] ? shift->id : shift;
     return $id == 0 || exists $SUPPORTED{$id} unless @_;

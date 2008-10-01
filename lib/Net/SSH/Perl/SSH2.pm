@@ -1,4 +1,4 @@
-# $Id: SSH2.pm,v 1.38 2005/10/12 00:57:31 dbrobins Exp $
+# $Id: SSH2.pm,v 1.42 2008/09/25 21:06:25 turnstep Exp $
 
 package Net::SSH::Perl::SSH2;
 use strict;
@@ -36,14 +36,17 @@ sub version_string {
 
 sub _proto_init {
     my $ssh = shift;
+    my $home = $ENV{HOME} || (getpwuid($>))[7];
     unless ($ssh->{config}->get('user_known_hosts')) {
-        $ssh->{config}->set('user_known_hosts', "$ENV{HOME}/.ssh/known_hosts2");
+        defined $home or croak "Cannot determine home directory, please set the environment variable HOME";
+        $ssh->{config}->set('user_known_hosts', "$home/.ssh/known_hosts2");
     }
     unless ($ssh->{config}->get('global_known_hosts')) {
         $ssh->{config}->set('global_known_hosts', "/etc/ssh_known_hosts2");
     }
     unless (my $if = $ssh->{config}->get('identity_files')) {
-        $ssh->{config}->set('identity_files', [ "$ENV{HOME}/.ssh/id_dsa" ]);
+        defined $home or croak "Cannot determine home directory, please set the environment variable HOME";
+        $ssh->{config}->set('identity_files', [ "$home/.ssh/id_dsa" ]);
     }
 
     for my $a (qw( password dsa kbd_interactive )) {
@@ -137,7 +140,7 @@ sub cmd {
         $r_packet->put_str($cmd);
         $r_packet->send;
 
-        if ($stdin) {
+        if (defined $stdin) {
             $channel->send_data($stdin);
 
             $channel->drain_outgoing;
@@ -189,7 +192,20 @@ sub shell {
         my $r_packet = $channel->request_start('pty-req', 0);
         my($term) = $ENV{TERM} =~ /(\w+)/;
         $r_packet->put_str($term);
-        $r_packet->put_int32(0) for 1..4;
+        my $foundsize = 0;
+        if (eval "require Term::ReadKey") {
+            my @sz = Term::ReadKey::GetTerminalSize($ssh->sock);
+            if (defined $sz[0]) {
+                $foundsize = 1;
+                $packet->put_int32($sz[1]); # height
+                $packet->put_int32($sz[0]); # width
+                $packet->put_int32($sz[2]); # xpix
+                $packet->put_int32($sz[3]); # ypix
+            }
+        }
+        if (!$foundsize) {
+            $packet->put_int32(0) for 1..4;
+        }
         $r_packet->put_str("");
         $r_packet->send;
         $channel->{ssh}->debug("Requesting shell.");
@@ -231,18 +247,18 @@ sub open2 {
 
     my $exit;
     $channel->register_handler(SSH2_MSG_CHANNEL_REQUEST, sub {
-	my($channel, $packet) = @_;
-	my $rtype = $packet->get_str;
-	my $reply = $packet->get_int8;
-	$channel->{ssh}->debug("input_channel_request: rtype $rtype reply $reply");
-	if ($rtype eq "exit-status") {
-	    $exit = $packet->get_int32;
-	}
-	if ($reply) {
-	    my $r_packet = $channel->{ssh}->packet_start(SSH2_MSG_CHANNEL_SUCCESS);
-	    $r_packet->put_int($channel->{remote_id});
-	    $r_packet->send;
-	}
+    my($channel, $packet) = @_;
+    my $rtype = $packet->get_str;
+    my $reply = $packet->get_int8;
+    $channel->{ssh}->debug("input_channel_request: rtype $rtype reply $reply");
+    if ($rtype eq "exit-status") {
+        $exit = $packet->get_int32;
+    }
+    if ($reply) {
+        my $r_packet = $channel->{ssh}->packet_start(SSH2_MSG_CHANNEL_SUCCESS);
+        $r_packet->put_int($channel->{remote_id});
+        $r_packet->send;
+    }
     });
 
     my $reply = sub {

@@ -1,4 +1,4 @@
-# $Id: DH1.pm,v 1.17 2003/12/03 15:35:21 autarch Exp $
+# $Id: DH1.pm,v 1.18 2008/10/02 18:51:15 turnstep Exp $
 
 package Net::SSH::Perl::Kex::DH1;
 use strict;
@@ -154,7 +154,7 @@ Exchange for I<Net::SSH::Perl>. It is a subclass of
 I<Net::SSH::Perl::Kex>.
 
 Group 1 Key Exchange uses the Diffie-Hellman key exchange algorithm
-to produce a shared seret key between client and server, without
+to produce a shared secret key between client and server, without
 ever sending the shared secret over the insecure network. All that is
 sent are the client and server public keys.
 

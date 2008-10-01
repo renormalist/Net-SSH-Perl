@@ -1,4 +1,4 @@
-# $Id: RSA.pm,v 1.8 2001/07/11 21:57:33 btrott Exp $
+# $Id: RSA.pm,v 1.9 2008/09/25 20:47:38 turnstep Exp $
 
 package Net::SSH::Perl::Key::RSA;
 use strict;
@@ -150,8 +150,8 @@ sub dump_public { $_[0]->ssh_name . ' ' . encode_base64( $_[0]->as_blob, '' ) }
 sub sign {
     my $key = shift;
     my($data) = @_;
-    my $dgst = ${ $key->{datafellows} } && SSH_COMPAT_BUG_RSASIGMD5 ?
-        'MD5' : 'SHA1';
+    my $dgst = ${ $key->{datafellows} } & SSH_COMPAT_BUG_RSASIGMD5
+		? 'MD5' : 'SHA1';
     my $rsa = Crypt::RSA::SS::PKCS1v15->new( Digest => $dgst );
     my $sig = $rsa->sign(
                  Digest  => $dgst,
@@ -159,11 +159,11 @@ sub sign {
                  Key     => $key->{rsa_priv}
            );
     croak $rsa->errstr unless $sig;
-    
-    my $b = Net::SSH::Perl::Buffer->new( MP => 'SSH2' );
-    $b->put_str($key->ssh_name);
-    $b->put_str($sig);
-    $b->bytes;
+
+    my $buf = Net::SSH::Perl::Buffer->new( MP => 'SSH2' );
+    $buf->put_str($key->ssh_name);
+    $buf->put_str($sig);
+    $buf->bytes;
 }
 
 sub verify {
@@ -176,7 +176,7 @@ sub verify {
     croak "Can't verify type ", $ktype unless $ktype eq $key->ssh_name;
     my $sigblob = $b->get_str;
 
-    my $dgst = ${ $key->{datafellows} } && SSH_COMPAT_BUG_RSASIGMD5 ?
+    my $dgst = ${ $key->{datafellows} } & SSH_COMPAT_BUG_RSASIGMD5 ?
         'MD5' : 'SHA1';
 
     my $rsa = Crypt::RSA::SS::PKCS1v15->new( Digest => $dgst );
