@@ -1,16 +1,17 @@
 #!/usr/bin/perl
 
-# $Id: 05-cipher.t,v 1.4 2008/10/02 20:46:44 turnstep Exp $
+# $Id: 05-cipher.t,v 1.5 2008/10/16 13:47:42 turnstep Exp $
 
 use strict;
 use warnings;
+use Data::Dumper;
 
 use vars qw( $CFG_FILE );
 BEGIN { unshift @INC, 't/' }
 require 'test-common.pl';
 
 use Net::SSH::Perl::Cipher;
-use Test;
+use Test::More;
 
 my $KEY = pack "H64", ("0123456789ABCDEF" x 4);
 my $PASS = pack "H16", ("0123456789ABCDEF");
@@ -21,8 +22,8 @@ BEGIN {
 
     my $num_tests = 0;
     for my $cname (keys %TESTS) {
-        my $id = Net::SSH::Perl::Cipher::id($cname);
-        if (Net::SSH::Perl::Cipher::supported($id)) {
+        my $id = Net::SSH::Perl::Cipher::id($cname); ## no critic
+        if (Net::SSH::Perl::Cipher::supported($id)) { ## no critic
             $num_tests += 12;
         }
         else {
@@ -60,13 +61,14 @@ for my $cname (keys %TESTS) {
 
 sub _check_it {
     my($ciph1, $ciph2) = @_;
-    ok($ciph1);
-    ok($ciph2);
+	my $line = (caller)[2];
+    ok($ciph1, "First argument was true from line $line");
+    ok($ciph2, "Second argument was true from line $line");
     my($enc, $dec);
     $enc = $ciph1->encrypt(_checkbytes());
     $dec = $ciph2->decrypt($enc);
-    ok(ord substr($dec, 0, 1) == ord substr($dec, 2, 1));
-    ok(ord substr($dec, 1, 1) == ord substr($dec, 3, 1));
+    ok(ord substr($dec, 0, 1) == ord substr($dec, 2, 1), "Values matched from line $line");
+    ok(ord substr($dec, 1, 1) == ord substr($dec, 3, 1), "Values matched from line $line");
 }
 
 sub _checkbytes {

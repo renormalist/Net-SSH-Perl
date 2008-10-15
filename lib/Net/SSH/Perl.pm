@@ -1,4 +1,4 @@
-# $Id: Perl.pm,v 1.121 2008/10/02 20:46:17 turnstep Exp $
+# $Id: Perl.pm,v 1.122 2008/10/15 15:47:34 turnstep Exp $
 
 package Net::SSH::Perl;
 use strict;
@@ -14,6 +14,7 @@ use vars qw( $VERSION $CONFIG $HOSTNAME );
 $CONFIG = {};
 
 use Socket;
+use IO::Socket;
 use Fcntl;
 use Symbol;
 use Carp qw( croak );
@@ -22,7 +23,7 @@ eval {
     $HOSTNAME = hostname();
 };
 
-$VERSION = '1.31';
+$VERSION = '1.32';
 
 sub VERSION { $VERSION }
 

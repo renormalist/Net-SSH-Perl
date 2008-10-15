@@ -11,7 +11,7 @@ use Test::More;
 use Data::Dumper;
 select(($|=1,select(STDERR),$|=1)[1]);
 
-my (@testfiles, @perlfiles, %fileslurp, $t);
+my (@testfiles, @perlfiles, $t);
 
 if (!$ENV{TEST_CRITIC}) {
 	plan skip_all => 'Set the environment variable TEST_CRITIC to enable this test';
@@ -34,23 +34,7 @@ else {
 	}
 	close $fh or die qq{Could not close the MANIFEST file: $!\n};
 
-	my $testmore = 0;
-	for my $file (@testfiles) {
-		open my $fh, '<', $file or die qq{Could not open "$file": $!\n};
-		my $line;
-		while (defined($line = <$fh>)) {
-			last if $line =~ /__DATA__/; ## perlcritic.t
-			for my $func (qw/ok isnt pass fail cmp cmp_ok is_deeply unlike like/) { ## no skip
-				next if $line !~ /\b$func\b/;
-				next if $line =~ /$func \w/; ## e.g. 'skip these tests'
-				next if $line =~ /[\$\%]$func/; ## e.g. $ok %ok
-				$fileslurp{$file}{$.}{$func} = $line;
-				$testmore++;
-			}
-		}
-		close $fh or die qq{Could not close "$file": $!\n};
-	}
-	plan tests => @perlfiles + @testfiles + $testmore;
+	plan tests => @perlfiles + @testfiles + 2;
 }
 ok (@testfiles, 'Found files in test directory');
 

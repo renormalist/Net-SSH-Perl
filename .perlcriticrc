@@ -39,6 +39,7 @@ stop_words = API AuthMgr BatchMode Blowfish CFB CRC DSA Diffie GMP Kex OpenSSH P
 [-Modules::ProhibitMultiplePackages]
 [-Modules::RequireBarewordIncludes]
 [-Modules::RequireEndWithOne]
+[-Modules::RequireFilenameMatchesPackage]
 [-References::ProhibitDoubleSigils]
 [-RegularExpressions::ProhibitCaptureWithoutTest]
 [-RegularExpressions::ProhibitEnumeratedClasses]

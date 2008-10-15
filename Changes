@@ -1,6 +1,11 @@
 Revision history for Net::SSH::Perl
 
-1.31 
+1.32 2008.10.16
+
+    - Add IO::Handle to Perl.pm (rt.cpan.org #40057, #35985)
+    - Minor test cleanups.
+
+1.31 2008.10.02
 
     - New co-maintainer, Greg Sabino Mullane (TURNSTEP).
     - Prevent t/03-packet.t from hanging due to high file descriptor.
