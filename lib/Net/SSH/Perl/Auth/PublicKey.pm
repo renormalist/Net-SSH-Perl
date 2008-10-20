@@ -1,4 +1,4 @@
-# $Id: PublicKey.pm,v 1.21 2008/09/25 20:53:48 turnstep Exp $
+# $Id: PublicKey.pm,v 1.22 2008/10/21 12:47:56 turnstep Exp $
 
 package Net::SSH::Perl::Auth::PublicKey;
 
@@ -72,9 +72,6 @@ sub _auth_identity {
     my($auth_file) = @_;
     my $ssh = $auth->{ssh};
     my($packet);
-
-	## Revisit per bug 32190
-    return unless -e $auth_file;
 
     my($key);
     $ssh->debug("Trying pubkey authentication with key file '$auth_file'");

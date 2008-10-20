@@ -1,5 +1,12 @@
 Revision history for Net::SSH::Perl
 
+1.33 2008.10.21
+
+    - Fix open() calls (rt.cpan.org #40020)
+    - Fix non-shell problem (rt.cpan.org #39980)
+    - Allow full agent forwarding (rt.cpan.org #32190)
+    - Handle hashed known_hosts files (Greg Sabino Mullane, rt.cpan.org #25175)
+
 1.32 2008.10.16
 
     - Add IO::Handle to Perl.pm (rt.cpan.org #40057, #35985)

@@ -1,4 +1,4 @@
-# $Id: SSH2.pm,v 1.43 2008/10/16 13:48:58 turnstep Exp $
+# $Id: SSH2.pm,v 1.46 2008/10/21 16:11:18 turnstep Exp $
 
 package Net::SSH::Perl::SSH2;
 use strict;
@@ -24,7 +24,7 @@ sub _dup {
     my($fh, $mode) = @_;
     my $dup = Symbol::gensym;
     my $str = "${mode}&$fh";
-    open $dup, '<', $str or die "Could not dupe: $!\n";
+    open ($dup, $str) or die "Could not dupe: $!\n"; ## no critic
     $dup;
 }
 
@@ -197,14 +197,14 @@ sub shell {
             my @sz = Term::ReadKey::GetTerminalSize($ssh->sock);
             if (defined $sz[0]) {
                 $foundsize = 1;
-                $packet->put_int32($sz[1]); # height
-                $packet->put_int32($sz[0]); # width
-                $packet->put_int32($sz[2]); # xpix
-                $packet->put_int32($sz[3]); # ypix
+                $r_packet->put_int32($sz[1]); # height
+                $r_packet->put_int32($sz[0]); # width
+                $r_packet->put_int32($sz[2]); # xpix
+                $r_packet->put_int32($sz[3]); # ypix
             }
         }
         if (!$foundsize) {
-            $packet->put_int32(0) for 1..4;
+            $r_packet->put_int32(0) for 1..4;
         }
         $r_packet->put_str("");
         $r_packet->send;
@@ -279,7 +279,7 @@ sub open2 {
     my $write = Symbol::gensym;
     tie *$read, 'Net::SSH::Perl::Handle::SSH2', 'r', $channel, \$exit;
     tie *$write, 'Net::SSH::Perl::Handle::SSH2', 'w', $channel, \$exit;
- 
+
     return ($read, $write);
 }
 
@@ -321,10 +321,13 @@ sub client_loop {
         my($rready, $wready) = $select_class->select($rb, $wb);
         $cmgr->process_input_packets($rready, $wready);
 
-        for my $a (@$rready) {
-            if ($a == $ssh->{session}{sock}) {
+        for my $ab (@$rready) {
+            if ($ab == $ssh->{session}{sock}) {
                 my $buf;
-                my $len = sysread $a, $buf, 8192;
+                my $len = sysread $ab, $buf, 8192;
+				if (! defined $len) {
+					croak "Connection failed: $!\n";
+				}
                 $ssh->break_client_loop if $len == 0;
                 ($buf) = $buf =~ /(.*)/s;  ## Untaint data. Anything allowed.
                 $ssh->incoming_data->append($buf);

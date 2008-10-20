@@ -1,4 +1,4 @@
-# $Id: Hosts.pm,v 1.9 2008/10/02 20:46:17 turnstep Exp $
+# $Id: Hosts.pm,v 1.10 2008/10/21 15:41:02 turnstep Exp $
 
 package Net::SSH::Perl::Util::Hosts;
 use strict;
@@ -15,10 +15,11 @@ sub _check_host_in_hostfile {
     open my $fh, '<', $hostfile or return HOST_NEW;
     local($_, $/);
     $/ = "\n";
-    my($status, $match, $hosts) = (HOST_NEW);
+    my ($status, $match, $hosts) = (HOST_NEW);
+	my $hashmodules = 0;
     while (<$fh>) {
         chomp;
-        my($hosts, $keyblob) = split /\s+/, $_, 2;
+        my ($hosts, $keyblob) = split /\s+/, $_, 2;
         my $fkey;
         ## Trap errors for unsupported key types (eg. if
         ## known_hosts has an entry for an ssh-rsa key, and
@@ -27,8 +28,49 @@ sub _check_host_in_hostfile {
             $fkey = $key_class->extract_public($keyblob);
         };
         next if $@;
+
+		my $checkhost = $host;
+
+		## Check for hashed entries
+		if (index($hosts, '|') == 0) {
+			if ($hosts !~ /^\|1\|(.+?)\|/) {
+				warn qq{Cannot parse line $. of $hostfile\n};
+				next;
+			}
+			my $salt = $1;
+
+			## Make sure we have the required helper modules.
+			## If not, give one warning per file
+			next if $hashmodules >= 1;
+			if (!$hashmodules) {
+				eval { require Digest::HMAC_SHA1; };
+				if ($@) {
+					$hashmodules += 1;
+				}
+				eval { require MIME::Base64; };
+				if ($@) {
+					$hashmodules += 2;
+				}
+				if ($hashmodules) {
+					my $msg = sprintf qq{Cannot parse hashed known_hosts file "$hostfile" without %s%s\n},
+						$hashmodules == 2 ? 'MIME::Base64' : 'Digest::HMAC_SHA1',
+							$hashmodules == 3 ? ' and MIME::Base64' : '';
+					warn $msg;
+					next;
+				}
+				else {
+					$hashmodules = -1;
+				}
+			}
+
+			my $rawsalt = MIME::Base64::decode_base64($salt);
+			my $hash = MIME::Base64::encode_base64(Digest::HMAC_SHA1::hmac_sha1($host,$rawsalt));
+			chomp $hash;
+			$checkhost = "|1|$salt|$hash";
+		}
+
         for my $h (split /,/, $hosts) {
-            if ($h eq $host) {
+            if ($h eq $checkhost) {
                 if ($key->equal($fkey)) {
                     close $fh or warn qq{Could not close "$hostfile": $!\n};
                     return HOST_OK;

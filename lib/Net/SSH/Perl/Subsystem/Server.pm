@@ -1,4 +1,4 @@
-# $Id: Server.pm,v 1.6 2008/10/16 13:48:58 turnstep Exp $
+# $Id: Server.pm,v 1.8 2008/10/21 16:11:18 turnstep Exp $
 
 package Net::SSH::Perl::Subsystem::Server;
 use strict;
@@ -97,7 +97,7 @@ sub _dup {
     my($fh, $mode) = @_;
     my $dup = Symbol::gensym;
     my $str = "${mode}&$fh";
-    open $dup, '<', $str or die "Could not dupe: $!\n";
+    open ($dup, $str) or die "Could not dupe: $!\n"; ## no critic
     $dup;
 }
 
