@@ -1,4 +1,4 @@
-# $Id: DH1.pm,v 1.18 2008/10/02 18:51:15 turnstep Exp $
+# $Id: DH1.pm,v 1.19 2009/01/26 01:00:25 turnstep Exp $
 
 package Net::SSH::Perl::Kex::DH1;
 use strict;
@@ -71,10 +71,9 @@ sub exchange {
     croak "Key verification failed for server host key"
         unless $s_host_key->verify($signature, $hash);
 
-    $kex->derive_keys($hash, $shared_secret);
-    $ssh->{kex} = $kex;
-
     $ssh->session_id($hash);
+
+    $kex->derive_keys($hash, $shared_secret, $ssh->session_id);
 }
 
 sub kex_hash {

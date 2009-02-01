@@ -128,6 +128,11 @@ SKIP: {
 __DATA__
 ## These words are okay
 
+## Changes:
+
+jamie
+Rekey
+
 ## Common:
 
 afterwards

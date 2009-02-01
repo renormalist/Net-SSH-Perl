@@ -1,4 +1,4 @@
-# $Id: Agent.pm,v 1.5 2008/10/02 20:46:17 turnstep Exp $
+# $Id: Agent.pm,v 1.6 2009/01/26 01:09:40 turnstep Exp $
 
 package Net::SSH::Perl::Agent;
 use strict;
@@ -77,7 +77,7 @@ sub num_identities {
         return;
     }
     elsif ($type != $type2) {
-        croak "Bad auth reply message type: $type1 != $type2";
+        croak "Bad auth reply message type: $type != $type2";
     }
 
     $agent->{num} = $reply->get_int32;

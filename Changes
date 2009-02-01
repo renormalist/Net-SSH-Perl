@@ -1,5 +1,13 @@
 Revision history for Net::SSH::Perl
 
+1.34 2009.02.01
+
+    - Rekey properly after 1 GB of data (rt.cpan.org #25044). Patch by Peter Oliver.
+    - Don't try to process nonexistent or empty auth file (rt.cpan.org #41877).
+    - Fix typo in croak message (rt.cpan.org #42056), thanks to jamie at audible.transient.net.
+    - Move 'use base' call after Crypt module loading, per suggestion (rt.cpan.org #42051).
+    - Only apply stdin if defined in SSH1 - John Payne (rt.cpan.org #42583)
+
 1.33 2008.10.21
 
     - Fix open() calls (rt.cpan.org #40020)

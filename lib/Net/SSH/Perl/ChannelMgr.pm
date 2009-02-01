@@ -1,4 +1,4 @@
-# $Id: ChannelMgr.pm,v 1.9 2003/12/03 15:35:21 autarch Exp $
+# $Id: ChannelMgr.pm,v 1.10 2009/01/26 01:00:25 turnstep Exp $
 
 package Net::SSH::Perl::ChannelMgr;
 use strict;
@@ -31,6 +31,7 @@ sub init {
         SSH2_MSG_CHANNEL_OPEN_FAILURE() => \&input_open_failure,
         SSH2_MSG_CHANNEL_REQUEST() => \&input_channel_request,
         SSH2_MSG_CHANNEL_WINDOW_ADJUST() => \&input_window_adjust,
+        SSH2_MSG_KEXINIT() => \&input_kexinit,
     };
 }
 
@@ -194,6 +195,15 @@ sub input_window_adjust {
     if (my $sub = $c->{handlers}{$packet->type}{code}) {
         $sub->($c, $packet);
     }
+}
+
+sub input_kexinit {
+    my $cmgr = shift;
+    my($packet) = @_;
+
+    my $kex = Net::SSH::Perl::Kex->new($cmgr->{ssh});
+    $kex->exchange($packet);
+    $cmgr->{ssh}->debug("Re-key complete.");
 }
 
 sub register_handler {

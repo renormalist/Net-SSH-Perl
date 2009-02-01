@@ -1,4 +1,4 @@
-# $Id: Kex.pm,v 1.22 2008/09/24 19:21:20 turnstep Exp $
+# $Id: Kex.pm,v 1.24 2009/02/02 01:18:27 turnstep Exp $
 
 package Net::SSH::Perl::Kex;
 use strict;
@@ -56,7 +56,7 @@ sub receive_comp   { $_[0]->{comp}[0] }
 sub exchange {
     my $kex = shift;
     my $ssh = $kex->{ssh};
-    my $packet;
+    my $packet = shift;
 
     my @proposal = @PROPOSAL;
     if (!$ssh->config->get('ciphers')) {
@@ -69,7 +69,7 @@ sub exchange {
         # valid SSH1 ciphers to the SSH2 equivalent names
         if($ssh->protocol eq PROTOCOL_SSH2) {
             my %ssh2_cipher = reverse %Net::SSH::Perl::Cipher::CIPHERS_SSH2;
-            $cs = join ',', map $ssh2_cipher{$_} || $_, split /,/, $cs;
+            $cs = join ',', map $ssh2_cipher{$_} || $_, split(/,/, $cs);
         }
         $proposal[ PROPOSAL_CIPH_ALGS_CTOS ] =
         $proposal[ PROPOSAL_CIPH_ALGS_STOC ] = $cs;
@@ -88,7 +88,7 @@ sub exchange {
     }
 
     $kex->{client_kexinit} = $kex->kexinit(\@proposal);
-    my($sprop) = $kex->exchange_kexinit;
+    my($sprop) = $kex->exchange_kexinit($packet);
 
     $kex->choose_conf(\@proposal, $sprop);
     $ssh->debug("Algorithms, c->s: " .
@@ -102,16 +102,14 @@ sub exchange {
     $ssh->debug("Waiting for NEWKEYS message.");
     $packet = Net::SSH::Perl::Packet->read_expect($ssh, SSH2_MSG_NEWKEYS);
 
-    $ssh->debug("Enabling incoming encryption/MAC/compression.");
-    for my $att (qw( mac ciph comp )) {
-        $kex->{$att}[0]->enable if $kex->{$att}[0];
-    }
-
-    $ssh->debug("Send NEWKEYS, enable outgoing encryption/MAC/compression.");
+    $ssh->debug("Send NEWKEYS.");
     $packet = $ssh->packet_start(SSH2_MSG_NEWKEYS);
     $packet->send;
 
+    $ssh->debug("Enabling encryption/MAC/compression.");
+    $ssh->{kex} = $kex;
     for my $att (qw( mac ciph comp )) {
+        $kex->{$att}[0]->enable if $kex->{$att}[0];
         $kex->{$att}[1]->enable if $kex->{$att}[1];
     }
 }
@@ -132,14 +130,21 @@ sub kexinit {
 sub exchange_kexinit {
     my $kex = shift;
     my $ssh = $kex->{ssh};
+    my $received_packet = shift;
     my $packet;
 
     $packet = $ssh->packet_start(SSH2_MSG_KEXINIT);
     $packet->put_chars($kex->client_kexinit->bytes);
     $packet->send;
 
-    $ssh->debug("Sent key-exchange init (KEXINIT), wait response.");
-    $packet = Net::SSH::Perl::Packet->read_expect($ssh, SSH2_MSG_KEXINIT);
+    if ( defined $received_packet ) {
+	$ssh->debug("Received key-exchange init (KEXINIT), sent response.");
+	$packet = $received_packet;
+    }
+    else {
+	$ssh->debug("Sent key-exchange init (KEXINIT), wait response.");
+	$packet = Net::SSH::Perl::Packet->read_expect($ssh, SSH2_MSG_KEXINIT);
+    }
     $kex->{server_kexinit} = $packet->data;
 
     $packet->get_char for 1..16;
@@ -152,11 +157,11 @@ sub exchange_kexinit {
 
 sub derive_keys {
     my $kex = shift;
-    my($hash, $shared_secret) = @_;
+    my($hash, $shared_secret, $session_id) = @_;
     my @keys;
     for my $i (0..5) {
-        push @keys,
-            derive_key(ord('A')+$i, $kex->{we_need}, $hash, $shared_secret);
+        push @keys, derive_key(ord('A')+$i, $kex->{we_need}, $hash,
+			       $shared_secret, $session_id);
     }
     my $is_ssh2 = $kex->{ssh}->protocol == PROTOCOL_SSH2;
     for my $mode (0, 1) {
@@ -169,10 +174,10 @@ sub derive_keys {
 }
 
 sub derive_key {
-    my($id, $need, $hash, $shared_secret) = @_;
+    my($id, $need, $hash, $shared_secret, $session_id) = @_;
     my $b = Net::SSH::Perl::Buffer->new( MP => 'SSH2' );
     $b->put_mp_int($shared_secret);
-    my $digest = sha1($b->bytes, $hash, chr($id), $hash);
+    my $digest = sha1($b->bytes, $hash, chr($id), $session_id);
     for (my $have = 20; $need > $have; $have += 20) {
         $digest .= sha1($b->bytes, $hash, $digest);
     }

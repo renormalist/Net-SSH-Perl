@@ -1,4 +1,4 @@
-# $Id: SSH2.pm,v 1.46 2008/10/21 16:11:18 turnstep Exp $
+# $Id: SSH2.pm,v 1.47 2009/01/26 01:50:38 turnstep Exp $
 
 package Net::SSH::Perl::SSH2;
 use strict;
@@ -136,6 +136,34 @@ sub cmd {
     $channel->register_handler(SSH2_MSG_CHANNEL_OPEN_CONFIRMATION, sub {
         my($channel, $packet) = @_;
         $channel->{ssh}->debug("Sending command: $cmd");
+
+		## Experimental pty support:
+		if (0 and $ssh->{config}->get('use_pty')) {
+			$ssh->debug("Requesting pty.");
+
+			my $packet = $channel->request_start('pty-req', 0);
+
+			my($term) = $ENV{TERM} =~ /(\w+)/;
+			$packet->put_str($term);
+			my $foundsize = 0;
+			if (eval "require Term::ReadKey") {
+				my @sz = Term::ReadKey::GetTerminalSize($ssh->sock);
+				if (defined $sz[0]) {
+					$foundsize = 1;
+					$packet->put_int32($sz[1]); # height
+					$packet->put_int32($sz[0]); # width
+					$packet->put_int32($sz[2]); # xpix
+					$packet->put_int32($sz[3]); # ypix
+				}
+			}
+			if (!$foundsize) {
+				$packet->put_int32(0) for 1..4;
+			}
+			$packet->put_str("");
+			$packet->send;
+		}
+
+		$channel->{ssh}->debug("Sending command: $cmd");
         my $r_packet = $channel->request_start("exec", 0);
         $r_packet->put_str($cmd);
         $r_packet->send;

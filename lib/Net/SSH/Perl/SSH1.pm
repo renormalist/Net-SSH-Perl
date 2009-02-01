@@ -1,4 +1,4 @@
-# $Id: SSH1.pm,v 1.23 2008/09/25 21:06:25 turnstep Exp $
+# $Id: SSH1.pm,v 1.24 2009/01/26 01:05:00 turnstep Exp $
 
 package Net::SSH::Perl::SSH1;
 use strict;
@@ -286,7 +286,7 @@ sub cmd {
     }
 
     $ssh->debug("Entering interactive session.");
-    $ssh->_start_interactive(1);
+    $ssh->_start_interactive(defined $stdin ? 1 : 0);
     my($stdout, $stderr, $exit) =
         map $ssh->{"_cmd_$_"}, qw( stdout stderr exit );
 

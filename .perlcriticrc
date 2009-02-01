@@ -2,7 +2,7 @@ verbose = 9
 profile-strictness = quiet
 
 [Documentation::PodSpelling]
-stop_words = API AuthMgr BatchMode Blowfish CFB CRC DSA Diffie GMP Kex OpenSSH PublicKey RSA Rhosts Rolsky SFTP SHA STDERR STDIN STDOUT Trott Util Zlib arcfour auth authfile bigint bigints blowfish cbc checksum cmd config crc datatype des eg filesystem filesystems foobar hmac hostfile ie init keyfiles len login manpage md msg namespace passphrase passphrases plugin pty publickey reblessed rsa sha shosts sshd stderr stdout subclassing substr substring tty undef username versa zlib
+stop_words = afterwards API AuthMgr BatchMode Blowfish CFB CRC DSA Diffie GMP Kex OpenSSH PublicKey RSA Rhosts Rolsky SFTP SHA STDERR STDIN STDOUT Trott Util Zlib arcfour auth authfile bigint bigints blowfish cbc checksum cmd config crc datatype des eg filesystem filesystems foobar hmac hostfile ie init keyfiles len login manpage md msg namespace passphrase passphrases plugin pty publickey reblessed rsa sha shosts sshd stderr stdout subclassing substr substring tty undef username versa zlib
 
 [-Bangs::ProhibitCommentedOutCode]
 [-Bangs::ProhibitFlagComments]

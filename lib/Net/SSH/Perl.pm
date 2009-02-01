@@ -1,4 +1,4 @@
-# $Id: Perl.pm,v 1.124 2008/10/21 11:03:14 turnstep Exp $
+# $Id: Perl.pm,v 1.126 2009/02/02 01:18:27 turnstep Exp $
 
 package Net::SSH::Perl;
 use strict;
@@ -23,7 +23,7 @@ eval {
     $HOSTNAME = hostname();
 };
 
-$VERSION = '1.33';
+$VERSION = '1.34';
 
 sub VERSION { $VERSION }
 
@@ -337,7 +337,7 @@ sub incoming_data {
 
 sub session_id {
     my $ssh = shift;
-    $ssh->{session}{id} = shift if @_;
+    $ssh->{session}{id} = shift if @_ and not defined $ssh->{session}{id};
     $ssh->{session}{id};
 }
 

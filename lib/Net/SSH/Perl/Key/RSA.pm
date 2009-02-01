@@ -1,4 +1,4 @@
-# $Id: RSA.pm,v 1.9 2008/09/25 20:47:38 turnstep Exp $
+# $Id: RSA.pm,v 1.10 2009/01/26 01:12:28 turnstep Exp $
 
 package Net::SSH::Perl::Key::RSA;
 use strict;
@@ -8,7 +8,6 @@ use Net::SSH::Perl::Constants qw( SSH_COMPAT_BUG_RSASIGMD5 );
 use Net::SSH::Perl::Util qw( :ssh2mp );
 
 use Net::SSH::Perl::Key;
-use base qw( Net::SSH::Perl::Key );
 
 use Math::Pari qw( PARI );
 use MIME::Base64;
@@ -18,6 +17,7 @@ use Crypt::RSA::Key;
 use Crypt::RSA::Key::Private;
 use Crypt::RSA::Key::Public;
 use Crypt::RSA::SS::PKCS1v15;
+use base qw( Net::SSH::Perl::Key );
 use Convert::PEM;
 use Carp qw( croak );
 use Digest::SHA1 qw( sha1 );
