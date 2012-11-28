@@ -27,7 +27,7 @@ $ssh->set_protocol(PROTOCOL_SSH1);
 ## in real usage; override the socket with a
 ## special tied filehandle.
 my $fh = do { local *FH; *FH };
-tie $fh, 'StringThing';
+tie *$fh, 'StringThing';
 $ssh->{session}{sock} = $fh;
 
 {
