@@ -1,6 +1,6 @@
 Revision history for Net::SSH::Perl
 
-1.34.1 2012.11.20
+1.35 2012.12.03
 
     - rt#76482 - apply patch to t/03-packet.t for 5.15+ (chisel++)
 
