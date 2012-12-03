@@ -1,5 +1,5 @@
 This file contains message digests of all files listed in MANIFEST,
-signed via the Module::Signature module, version 0.55.
+signed via the Module::Signature module, version 0.70.
 
 To verify the content in this distribution, first make sure you have
 Module::Signature installed, then type:
@@ -12,14 +12,14 @@ the distribution may already have been compromised, and you should
 not run its Makefile.PL or Build.PL.
 
 -----BEGIN PGP SIGNED MESSAGE-----
-Hash: RIPEMD160
+Hash: SHA1
 
 SHA1 cc451367f759ef30c8200859b4248973a973b623 .perlcriticrc
-SHA1 c6482212ac6da98ebfe5fed713c5c8881433db31 Changes
+SHA1 1f4c4dcfd3740fbc9477ea246a387fe7f9a44550 Changes
 SHA1 f235ba4160673bcb7c9d58c2f09dbc7fc0efadea LICENSE
 SHA1 e6c54162a1d800ad0bb183ab6766188838d3749f MANIFEST
-SHA1 ae632432280c360f5f546337922ca418eb8fcdd6 MANIFEST.SKIP
-SHA1 a0047a9130c3292681f94ab910c88630adb9178b META.yml
+SHA1 84efc47ee3a4253e0ab8029a26c263a6553beda7 MANIFEST.SKIP
+SHA1 0976d28773c4be7e9a763910f01d484611867f02 META.yml
 SHA1 ed90f5c217f68c08f9fcdeb40870b09e855d704d Makefile.PL
 SHA1 c4f71c29acb966232282d57b570484f7ceef208b README
 SHA1 ca4a01e14284c7a3efa45229e3ba0877ade60285 ToDo
@@ -29,7 +29,7 @@ SHA1 44ce715b8029f44123388bbc0fe50cea4334dc79 eg/pssh
 SHA1 3a7ecc57b316a02a72f8f56602b6d59aa4a4c2ce eg/pssh-keygen
 SHA1 c36af8adc7bcc9ccbef3beed15723a4a0e8db15a eg/remoteinteract.pl
 SHA1 7ff227ceb0c28c8f98b5772072eb6bf908f96555 eg/remoteinteract2.pl
-SHA1 d06e9cd3f061aeb3150d1f4eec8762203f495b8a lib/Net/SSH/Perl.pm
+SHA1 9ca76bd2a4b8bc55c14cff93105d964e0d4f35f2 lib/Net/SSH/Perl.pm
 SHA1 f7b6f7cd52ce138615b0fa1bbd0b965bd138e4e8 lib/Net/SSH/Perl/Agent.pm
 SHA1 42d0e1ae5b5c4f90dfcc8b28076ec94c682174f0 lib/Net/SSH/Perl/Auth.pm
 SHA1 2587036da2cddb5278e84db1cc10d2d2c2cd1029 lib/Net/SSH/Perl/Auth/ChallengeResponse.pm
@@ -81,7 +81,7 @@ SHA1 8dc75a7028f51dc1ceb5a9d4019746d2b2be3839 lib/Net/SSH/Perl/Util/Term.pm
 SHA1 9c829bf4def16354b48bc7bbda175977189abaf7 t/00-signature.t
 SHA1 3008e62c337b38c20f99cd16ac08b8404e3abd55 t/01-compile.t
 SHA1 18aab716396b7ca266475b84081bc0039eeeca06 t/02-buffer.t
-SHA1 b816d5d743a461e0ad0d7ea483d0c91ab8716328 t/03-packet.t
+SHA1 2b9cb70983af39ac6a0c04b0ea50969d91c10e16 t/03-packet.t
 SHA1 77b008f9141bb8b35e1020b33111bfdbe0250c15 t/04-config.t
 SHA1 b1dc7d238503bee0469e014a9e1b6bee547e9334 t/05-cipher.t
 SHA1 42eb8620bd0be0c5a9ca24b83f3630c8e46500c6 t/06-auth.t
@@ -94,8 +94,9 @@ SHA1 9a32e630c87d1cc3ceaf2b5585519b55d12b79d3 t/config
 SHA1 885358760910acc3898301c9af18cd634ddd81a8 t/psshd
 SHA1 9b7aa51c0e3a2fede4a7b4767c3d507f37f46696 t/test-common.pl
 -----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
 
-iEYEAREDAAYFAkmGSf4ACgkQvJuQZxSWSsi5OQCgxH2dv4daZtlsv4DiyC8LMTUS
-a1sAnA6DWrTXcknq0aLBamQtuZW26CcE
-=ew0K
+iEYEARECAAYFAlC8hwMACgkQJszQZs1hPJuePACgtzCf6E6l5IELHYxeT+K2AMgv
+HqIAnj9XlJ13vm/YkjA8yVWzAyXGdrfy
+=FOgR
 -----END PGP SIGNATURE-----
