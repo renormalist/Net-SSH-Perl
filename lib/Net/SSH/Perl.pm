@@ -351,7 +351,7 @@ sub check_host_key {
     $s_hostfile ||= $ssh->{config}->get('global_known_hosts');
 
     my $status = _check_host_in_hostfile($host, $u_hostfile, $key);
-    unless (defined $status && $status == HOST_OK) {
+    unless (defined $status && ($status == HOST_OK || $status == HOST_CHANGED)) {
         $status = _check_host_in_hostfile($host, $s_hostfile, $key);
     }
 
