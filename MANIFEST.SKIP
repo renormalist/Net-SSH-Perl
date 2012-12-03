@@ -3,6 +3,7 @@
 ^Makefile\.[a-z]+$
 ^pm_to_blib$
 CVS/.*
+^.git
 ,v$
 ^tmp/
 \.old$
@@ -19,3 +20,5 @@ t/zz.*
 test\.[co]
 benchmarks/.*
 Net-SSH-Perl-.*
+MYMETA.json
+MYMETA.yml
