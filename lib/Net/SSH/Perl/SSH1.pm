@@ -219,7 +219,7 @@ sub _setup_connection {
         $ssh->debug("Requesting pty.");
         my($packet);
         $packet = $ssh->packet_start(SSH_CMSG_REQUEST_PTY);
-        my($term) = $ENV{TERM} =~ /(\w+)/;
+        my($term) = $ENV{TERM} =~ /(\S+)/;
         $packet->put_str($term);
         my $foundsize = 0;
         if (eval "require Term::ReadKey") {

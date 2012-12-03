@@ -218,7 +218,7 @@ sub shell {
     $channel->register_handler(SSH2_MSG_CHANNEL_OPEN_CONFIRMATION, sub {
         my($channel, $packet) = @_;
         my $r_packet = $channel->request_start('pty-req', 0);
-        my($term) = $ENV{TERM} =~ /(\w+)/;
+        my($term) = $ENV{TERM} =~ /(\S+)/;
         $r_packet->put_str($term);
         my $foundsize = 0;
         if (eval "require Term::ReadKey") {
