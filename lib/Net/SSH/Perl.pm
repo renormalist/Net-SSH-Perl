@@ -296,7 +296,7 @@ sub _exchange_identification {
         $compat20 ? PROTOCOL_MINOR_2 : PROTOCOL_MINOR_1,
         $VERSION;
     $ssh->{client_version_string} = substr $buf, 0, -1;
-    print $sock $buf;
+    syswrite $sock, $buf;
 
     $ssh->set_protocol($set_proto);
     $ssh->_compat_init($remote_version);
