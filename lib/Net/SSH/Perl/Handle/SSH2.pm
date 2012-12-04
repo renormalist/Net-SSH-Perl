@@ -43,6 +43,7 @@ sub WRITE {
     my $len = length($data);
     while ($data) {
         my $chunk = substr($data, 0, CHUNK_SIZE, '');
+        return undef if $h->{channel}{istate} != CHAN_INPUT_OPEN;
         $h->{channel}->send_data($chunk);
     }
     $len;

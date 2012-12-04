@@ -266,6 +266,7 @@ sub rcvd_oclose {
 sub shutdown_read {
     my $c = shift;
     return if $c->{type} == SSH_CHANNEL_LARVAL;
+    $c->{input}->empty;
     $c->{ssh}->debug("channel $c->{id}: close_read");
 
     ## XXX: have to check for socket ($c->{socket}) and either
