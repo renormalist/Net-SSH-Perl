@@ -9,11 +9,12 @@ use Net::SSH::Perl::Config;
 use Net::SSH::Perl::Constants qw( :protocol :compat :hosts );
 use Net::SSH::Perl::Cipher;
 use Net::SSH::Perl::Util qw( :hosts _read_yes_or_no );
+use Data::Dumper;
 
 use vars qw( $VERSION $CONFIG $HOSTNAME );
 $CONFIG = {};
 
-use Socket;
+use Socket qw(IPPROTO_TCP TCP_NODELAY);
 use IO::Socket;
 use Fcntl;
 use Symbol;
@@ -232,6 +233,7 @@ sub _create_socket {
     for(; $p != $end; $p += $delta) {
         socket($sock, AF_INET, SOCK_STREAM, getprotobyname('tcp') || 0) ||
             croak "Net::SSH: Can't create socket: $!";
+        setsockopt($sock, IPPROTO_TCP, TCP_NODELAY, 1);
         last if not $p or bind($sock, sockaddr_in($p,$addr));
         if ($! =~ /Address already in use/i) {
             close($sock) or warn qq{Could not close socket: $!\n};
@@ -346,6 +348,8 @@ sub packet_start { Net::SSH::Perl::Packet->new($_[0], type => $_[1]) }
 sub check_host_key {
     my $ssh = shift;
     my($key, $host, $u_hostfile, $s_hostfile) = @_;
+    my $strict_host_key_checking = $ssh->{config}->get('strict_host_key_checking');
+    $strict_host_key_checking ||= 'no';
     $host ||= $ssh->{host};
     $u_hostfile ||= $ssh->{config}->get('user_known_hosts');
     $s_hostfile ||= $ssh->{config}->get('global_known_hosts');
@@ -359,7 +363,10 @@ sub check_host_key {
         $ssh->debug("Host '$host' is known and matches the host key.");
     }
     elsif ($status == HOST_NEW) {
-        if ($ssh->{config}->get('interactive')) {
+        if ($strict_host_key_checking =~ /(ask|yes)/) {
+            if (!$ssh->{config}->get('interactive')) {
+                croak "Host key verification failed.";
+            }
             my $prompt =
 qq(The authenticity of host '$host' can't be established.
 Key fingerprint is @{[ $key->fingerprint ]}.
@@ -586,6 +593,27 @@ to 0), this will be set automatically to 1. In other words,
 you probably won't need to use this, often.
 
 The default is 1 if you're starting up a shell, and 0 otherwise.
+
+=item * terminal_mode_string
+
+Specify the POSIX terminal mode string to send when use_pty is
+set. By default the only mode set is the VEOF character to 0x04
+(opcode 5, value 0x00000004). See RFC 4254 section 8 for complete
+details on this value.
+
+=item * no_append_veof
+
+(SSH-2 only) Set this to 1 if you specified use_pty and do not want
+Ctrl-D (0x04) appended twice to the end of your input string. On most
+systems, these bytes cause the terminal driver to return "EOF" when
+standard input is read. Without them, many programs that read from
+standard input will hang after consuming all the data on STDIN.
+
+No other modifications are made to input data. If your data contains
+0x04 bytes, you may need to escape them.
+
+Set this to 0 if you have raw terminal data to specify on standard
+input, and you have terminated it correctly.
 
 =item * options
 

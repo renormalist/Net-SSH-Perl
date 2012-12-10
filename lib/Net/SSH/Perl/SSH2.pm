@@ -135,10 +135,9 @@ sub cmd {
 
     $channel->register_handler(SSH2_MSG_CHANNEL_OPEN_CONFIRMATION, sub {
         my($channel, $packet) = @_;
-        $channel->{ssh}->debug("Sending command: $cmd");
 
-		## Experimental pty support:
-		if (0 and $ssh->{config}->get('use_pty')) {
+                ## Experimental pty support:
+                if ($ssh->{config}->get('use_pty')) {
 			$ssh->debug("Requesting pty.");
 
 			my $packet = $channel->request_start('pty-req', 0);
@@ -159,16 +158,38 @@ sub cmd {
 			if (!$foundsize) {
 				$packet->put_int32(0) for 1..4;
 			}
-			$packet->put_str("");
-			$packet->send;
-		}
 
-		$channel->{ssh}->debug("Sending command: $cmd");
+            # Array used to build Pseudo-tty terminal modes; fat commas separate opcodes from values for clarity.
+
+            my $terminal_mode_string;
+            if(!defined($ssh->{config}->get('terminal_mode_string'))) {
+                my @terminal_modes = (
+                   5 => 0,0,0,4,      # VEOF => 0x04 (^d)
+                   0                  # string must end with a 0 opcode
+                );
+                for my $char (@terminal_modes) {
+                    $terminal_mode_string .= chr($char);
+                }
+            }
+            else {
+                $terminal_mode_string = $ssh->{config}->get('terminal_mode_string');
+            }
+            $packet->put_str($terminal_mode_string);
+            $packet->send;
+        }
+
         my $r_packet = $channel->request_start("exec", 0);
         $r_packet->put_str($cmd);
         $r_packet->send;
 
         if (defined $stdin) {
+            if($ssh->{config}->get('use_pty') && !$ssh->{config}->get('no_append_veof')) {
+                my $append_string = $ssh->{config}->get('stdin_append');
+                if(!defined($append_string)) {
+                    $append_string = chr(4) . chr(4);
+                }
+                $stdin .= $append_string;
+            }
             $channel->send_data($stdin);
 
             $channel->drain_outgoing;
