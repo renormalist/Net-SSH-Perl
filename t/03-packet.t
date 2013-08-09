@@ -99,7 +99,7 @@ $ssh->{session}{sock} = $fh;
     # (which dups some handles), we're likely to have as many as 8
     # real handles open, if not more
 	# However, too high and we run into problems with the shell
-    sub FILENO { 25 }
+    sub FILENO { 24 }
 
     sub READ
     {
