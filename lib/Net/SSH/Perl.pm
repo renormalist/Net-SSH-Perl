@@ -26,7 +26,7 @@ eval {
     $HOSTNAME = hostname();
 };
 
-$VERSION = '1.35';
+$VERSION = '1.36';
 
 sub VERSION { $VERSION }
 
