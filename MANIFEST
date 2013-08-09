@@ -1,3 +1,4 @@
+.perlcriticrc
 Changes
 eg/cmd.pl
 eg/pscp
@@ -10,6 +11,7 @@ lib/Net/SSH/Perl/Agent.pm
 lib/Net/SSH/Perl/Auth.pm
 lib/Net/SSH/Perl/Auth/ChallengeResponse.pm
 lib/Net/SSH/Perl/Auth/KeyboardInt.pm
+lib/Net/SSH/Perl/Auth/KeyboardInteractive.pm
 lib/Net/SSH/Perl/Auth/Password.pm
 lib/Net/SSH/Perl/Auth/PublicKey.pm
 lib/Net/SSH/Perl/Auth/Rhosts.pm
@@ -54,13 +56,13 @@ lib/Net/SSH/Perl/Util/SSH1Misc.pm
 lib/Net/SSH/Perl/Util/SSH1MP.pm
 lib/Net/SSH/Perl/Util/SSH2MP.pm
 lib/Net/SSH/Perl/Util/Term.pm
-SIGNATURE
 LICENSE
 Makefile.PL
 MANIFEST
 MANIFEST.SKIP
 META.yml			Module meta-data (added by MakeMaker)
 README
+SIGNATURE
 t/00-signature.t
 t/01-compile.t
 t/02-buffer.t
@@ -77,4 +79,3 @@ t/config
 t/psshd
 t/test-common.pl
 ToDo
-.perlcriticrc
