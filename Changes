@@ -1,5 +1,10 @@
 Revision history for Net::SSH::Perl
 
+1.37 2014.03.17
+
+    - RT #91840 - enabled config option "StrictHostKeyChecking"
+                  (the corresponding code already existed)
+
 1.36 2013.08.09
 
   Apply many bugfixes from RT discussions.
