@@ -30,6 +30,7 @@ use Carp qw( croak );
     RhostsAuthentication    => [ \&_set_yesno, 'auth_rhosts' ],
     RhostsRSAAuthentication => [ \&_set_yesno, 'auth_rhosts_rsa' ],
     RSAAuthentication       => [ \&_set_yesno, 'auth_rsa' ],
+    StrictHostKeyChecking   => [ \&_set_str, 'strict_host_key_checking' ],
     UsePrivilegedPort       => [ \&_set_yesno, 'privileged' ],
     User                    => [ \&_set_str, 'user' ],
     UserKnownHostsFile      => [ \&_set_str, 'user_known_hosts' ],

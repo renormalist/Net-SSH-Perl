@@ -26,7 +26,7 @@ eval {
     $HOSTNAME = hostname();
 };
 
-$VERSION = '1.36';
+$VERSION = '1.37';
 
 sub VERSION { $VERSION }
 
@@ -591,6 +591,15 @@ the client finds one that authenticates successfully.
 If you don't provide this, RSA authentication defaults to using
 F<$ENV{HOME}/.ssh/identity>, and DSA authentication defaults to
 F<$ENV{HOME}/.ssh/id_dsa>.
+
+=item * strict_host_key_checking
+
+This corresponds to the I<StrictHostKeyChecking> ssh configuration
+option. Allowed values are I<no>, I<yes>, or I<ask>. I<no> disables
+host key checking, e.g., if you connect to a virtual host that answers
+to multiple IP addresses. I<yes> or I<ask> enable it, and when it
+fails in I<interactive> mode, you are asked whether to continue. The
+host is then added to the list of known hosts.
 
 =item * compression
 
