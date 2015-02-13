@@ -38,7 +38,7 @@ resources:
   license               : http://dev.perl.org/licenses/
   bugtracker            : http://rt.cpan.org/Public/Dist/Display.html?Name=Net-SSH-Perl
   MailingList           : https://lists.sourceforge.net/lists/listinfo/ssh-sftp-perl-users
-  Repository            : http://sourceforge.net/projects/ssh-sftp-perl/
+  repository            : https://github.com/renormalist/Net-SSH-Perl
 
 meta-spec:
   version               : 1.4
