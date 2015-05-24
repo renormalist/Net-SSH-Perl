@@ -226,8 +226,8 @@ sub _setup_connection {
             my @sz = Term::ReadKey::GetTerminalSize($ssh->sock);
             if (defined $sz[0]) {
                 $foundsize = 1;
-                $packet->put_int32($sz[1]); # height
                 $packet->put_int32($sz[0]); # width
+                $packet->put_int32($sz[1]); # height
                 $packet->put_int32($sz[2]); # xpix
                 $packet->put_int32($sz[3]); # ypix
             }
