@@ -246,8 +246,8 @@ sub shell {
             my @sz = Term::ReadKey::GetTerminalSize($ssh->sock);
             if (defined $sz[0]) {
                 $foundsize = 1;
-                $r_packet->put_int32($sz[1]); # height
                 $r_packet->put_int32($sz[0]); # width
+                $r_packet->put_int32($sz[1]); # height
                 $r_packet->put_int32($sz[2]); # xpix
                 $r_packet->put_int32($sz[3]); # ypix
             }
