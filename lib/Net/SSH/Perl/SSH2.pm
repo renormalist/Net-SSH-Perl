@@ -2,6 +2,7 @@
 
 package Net::SSH::Perl::SSH2;
 use strict;
+use warnings;
 
 use Net::SSH::Perl::Kex;
 use Net::SSH::Perl::ChannelMgr;

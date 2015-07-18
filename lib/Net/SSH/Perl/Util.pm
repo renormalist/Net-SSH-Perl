@@ -2,6 +2,7 @@
 
 package Net::SSH::Perl::Util;
 use strict;
+use warnings;
 
 use vars qw( %FUNC_TO_MOD %EXPORT_TAGS );
 

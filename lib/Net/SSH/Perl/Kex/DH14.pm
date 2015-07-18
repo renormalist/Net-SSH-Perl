@@ -2,6 +2,7 @@
 
 package Net::SSH::Perl::Kex::DH14;
 use strict;
+use warnings;
 
 use Carp qw( croak );
 use Crypt::DH;

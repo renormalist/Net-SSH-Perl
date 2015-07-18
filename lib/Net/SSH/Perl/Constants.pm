@@ -2,6 +2,7 @@
 
 package Net::SSH::Perl::Constants;
 use strict;
+use warnings;
 
 use vars qw( %CONSTANTS );
 %CONSTANTS = (

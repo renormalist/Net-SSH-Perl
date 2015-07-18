@@ -2,6 +2,7 @@
 
 package Net::SSH::Perl::SSH1;
 use strict;
+use warnings;
 
 use Net::SSH::Perl::Packet;
 use Net::SSH::Perl::Buffer;
