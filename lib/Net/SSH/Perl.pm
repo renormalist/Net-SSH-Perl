@@ -10,7 +10,6 @@ use Net::SSH::Perl::Config;
 use Net::SSH::Perl::Constants qw( :protocol :compat :hosts );
 use Net::SSH::Perl::Cipher;
 use Net::SSH::Perl::Util qw( :hosts _read_yes_or_no );
-use Data::Dumper;
 
 use Errno qw( EAGAIN EWOULDBLOCK );
 
