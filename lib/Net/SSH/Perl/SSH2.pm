@@ -37,7 +37,7 @@ sub version_string {
 
 sub _proto_init {
     my $ssh = shift;
-    my $home = $ENV{HOME} || (getpwuid($>))[7];
+    my $home = $ENV{HOME} || $ENV{HOMEPATH} || (getpwuid($>))[7];
     unless ($ssh->{config}->get('user_known_hosts')) {
         defined $home or croak "Cannot determine home directory, please set the environment variable HOME";
         $ssh->{config}->set('user_known_hosts', "$home/.ssh/known_hosts2");
