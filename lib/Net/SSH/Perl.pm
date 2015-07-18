@@ -21,6 +21,7 @@ use IO::Socket;
 use Fcntl;
 use Symbol;
 use Carp qw( croak );
+use File::Spec::Functions qw( catfile );
 use Sys::Hostname;
 eval {
     $HOSTNAME = hostname();
@@ -108,8 +109,12 @@ sub _init {
     my $ssh = shift;
 
     my %arg = @_;
-    my $user_config = delete $arg{user_config} || "$ENV{HOME}/.ssh/config";
-    my $sys_config  = delete $arg{sys_config}  || "/etc/ssh_config";
+    my $user_config = delete $arg{user_config}
+      || catfile($ENV{HOME} || $ENV{USERPROFILE}, '.ssh', 'config');
+    my $sys_config  = delete $arg{sys_config}
+      || $^O eq 'MSWin32'
+        ? catfile($ENV{WINDIR}, 'ssh_config')
+        : "/etc/ssh_config";
 
     my $directives = delete $arg{options} || [];
 
@@ -213,8 +218,10 @@ sub _connect {
     $ssh->{session}{sock} = $sock;
     $ssh->_exchange_identification;
 
-    defined($sock->blocking(0))
-        or die "Can't set socket non-blocking: $!";
+    if ($^O ne 'MSWin32') {
+      defined($sock->blocking(0))
+          or die "Can't set socket non-blocking: $!";
+    }
 
     $ssh->debug("Connection established.");
 }
