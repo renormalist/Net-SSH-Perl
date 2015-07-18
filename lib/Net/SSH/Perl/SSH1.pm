@@ -19,6 +19,7 @@ use base qw( Net::SSH::Perl );
 
 use Math::GMP;
 use Carp qw( croak );
+use File::Spec::Functions qw( catfile );
 
 sub version_string {
     my $class = shift;
@@ -28,22 +29,27 @@ sub version_string {
 
 sub _proto_init {
     my $ssh = shift;
-    my $home = $ENV{HOME} || $ENV{HOMEPATH} || (getpwuid($>))[7];
-    unless ($ssh->{config}->get('user_known_hosts')) {
+    my $home = $ENV{HOME} || $ENV{USERPROFILE} || (getpwuid($>))[7];
+    my $config = $ssh->{config};
+
+    unless ($config->get('user_known_hosts')) {
         defined $home or croak "Cannot determine home directory, please set the environment variable HOME";
-        $ssh->{config}->set('user_known_hosts', "$home/.ssh/known_hosts");
+        $config->set('user_known_hosts', catfile($home, '.ssh', 'known_hosts'));
     }
-    unless ($ssh->{config}->get('global_known_hosts')) {
-        $ssh->{config}->set('global_known_hosts', "/etc/ssh_known_hosts");
+    unless ($config->get('global_known_hosts')) {
+        my $glob_known_hosts = $^O eq 'MSWin32'
+          ? catfile( $ENV{WINDIR}, 'ssh_known_hosts' )
+          : '/etc/ssh_known_hosts';
+        $config->set('global_known_hosts', $glob_known_hosts );
     }
-    unless (my $if = $ssh->{config}->get('identity_files')) {
+    unless (my $if = $config->get('identity_files')) {
         defined $home or croak "Cannot determine home directory, please set the environment variable HOME";
-        $ssh->{config}->set('identity_files', [ "$home/.ssh/identity" ]);
+        $config->set('identity_files', [ catfile($home, '.ssh', 'identity') ]);
     }
 
     for my $a (qw( password rhosts rhosts_rsa rsa ch_res )) {
-        $ssh->{config}->set("auth_$a", 1)
-            unless defined $ssh->{config}->get("auth_$a");
+        $config->set("auth_$a", 1)
+            unless defined $config->get("auth_$a");
     }
 }
 

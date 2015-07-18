@@ -7,6 +7,7 @@ use ExtUtils::MakeMaker qw(prompt WriteMakefile);
 my %prereq = (
         'Digest::MD5'       => 0,
         'IO::Socket'        => 0,
+        'File::Spec'        => 0,
 );
 
 my %SSH_PREREQ = (
