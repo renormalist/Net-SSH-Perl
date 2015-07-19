@@ -13,7 +13,7 @@ use Net::SSH::Perl::Constants qw( :protocol :msg2
 use Net::SSH::Perl::Cipher;
 use Net::SSH::Perl::AuthMgr;
 use Net::SSH::Perl::Comp;
-use Net::SSH::Perl::Util qw(:hosts);
+use Net::SSH::Perl::Util qw( :hosts :win32 );
 
 use base qw( Net::SSH::Perl );
 
@@ -24,6 +24,19 @@ sub select_class { 'IO::Select' }
 
 sub _dup {
     my($fh, $mode) = @_;
+
+    if ( $^O eq 'MSWin32' ) {
+        #
+        # On Windows platform select() is working only for sockets.
+        #
+        my ( $r, $w ) = _socketpair()
+            or die "Could not create socketpair: $!\n";
+
+        # TODO: full support (e.g. stdin)
+
+        return ( $mode eq '>' ) ? $w : $r;
+    }
+
     my $dup = Symbol::gensym;
     my $str = "${mode}&$fh";
     open ($dup, $str) or die "Could not dupe: $!\n"; ## no critic
@@ -374,7 +387,8 @@ sub client_loop {
         my $oc = grep { defined } @{ $cmgr->{channels} };
         last unless $oc > 1;
 
-        my($rready, $wready) = $select_class->select($rb, $wb);
+        my($rready, $wready) = $select_class->select($rb, $wb)
+            or die "select: $!";
         $cmgr->process_input_packets($rready, $wready);
 
         for my $ab (@$rready) {

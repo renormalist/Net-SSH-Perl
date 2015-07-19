@@ -218,7 +218,11 @@ sub _connect {
     $ssh->{session}{sock} = $sock;
     $ssh->_exchange_identification;
 
-    if ($^O ne 'MSWin32') {
+    if ($^O eq 'MSWin32') {
+      my $nonblocking = 1;
+      ioctl $sock, 0x8004667e, \\$nonblocking;
+    }
+    else {
       defined($sock->blocking(0))
           or die "Can't set socket non-blocking: $!";
     }

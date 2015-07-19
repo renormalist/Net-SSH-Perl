@@ -58,6 +58,7 @@ lib/Net/SSH/Perl/Util/SSH1Misc.pm
 lib/Net/SSH/Perl/Util/SSH1MP.pm
 lib/Net/SSH/Perl/Util/SSH2MP.pm
 lib/Net/SSH/Perl/Util/Term.pm
+lib/Net/SSH/Perl/Util/Win32.pm
 LICENSE
 Makefile.PL
 MANIFEST			This list of files
