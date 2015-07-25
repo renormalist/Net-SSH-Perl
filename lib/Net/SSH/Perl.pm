@@ -2,6 +2,7 @@
 
 package Net::SSH::Perl;
 use strict;
+use warnings;
 
 use Net::SSH::Perl::Packet;
 use Net::SSH::Perl::Buffer;
@@ -9,7 +10,6 @@ use Net::SSH::Perl::Config;
 use Net::SSH::Perl::Constants qw( :protocol :compat :hosts );
 use Net::SSH::Perl::Cipher;
 use Net::SSH::Perl::Util qw( :hosts _read_yes_or_no );
-use Data::Dumper;
 
 use Errno qw( EAGAIN EWOULDBLOCK );
 
@@ -21,6 +21,7 @@ use IO::Socket;
 use Fcntl;
 use Symbol;
 use Carp qw( croak );
+use File::Spec::Functions qw( catfile );
 use Sys::Hostname;
 eval {
     $HOSTNAME = hostname();
@@ -108,8 +109,12 @@ sub _init {
     my $ssh = shift;
 
     my %arg = @_;
-    my $user_config = delete $arg{user_config} || "$ENV{HOME}/.ssh/config";
-    my $sys_config  = delete $arg{sys_config}  || "/etc/ssh_config";
+    my $user_config = delete $arg{user_config}
+      || catfile($ENV{HOME} || $ENV{USERPROFILE}, '.ssh', 'config');
+    my $sys_config  = delete $arg{sys_config}
+      || $^O eq 'MSWin32'
+        ? catfile($ENV{WINDIR}, 'ssh_config')
+        : "/etc/ssh_config";
 
     my $directives = delete $arg{options} || [];
 
@@ -213,8 +218,14 @@ sub _connect {
     $ssh->{session}{sock} = $sock;
     $ssh->_exchange_identification;
 
-    defined($sock->blocking(0))
-        or die "Can't set socket non-blocking: $!";
+    if ($^O eq 'MSWin32') {
+      my $nonblocking = 1;
+      ioctl $sock, 0x8004667e, \\$nonblocking;
+    }
+    else {
+      defined($sock->blocking(0))
+          or die "Can't set socket non-blocking: $!";
+    }
 
     $ssh->debug("Connection established.");
 }

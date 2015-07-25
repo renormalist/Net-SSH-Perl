@@ -2,6 +2,7 @@
 
 package Net::SSH::Perl::Kex;
 use strict;
+use warnings;
 
 use Net::SSH::Perl::Kex::DH1;
 use Net::SSH::Perl::Kex::DH14;

@@ -2,6 +2,7 @@
 
 package Net::SSH::Perl::Util;
 use strict;
+use warnings;
 
 use vars qw( %FUNC_TO_MOD %EXPORT_TAGS );
 
@@ -24,6 +25,7 @@ use vars qw( %FUNC_TO_MOD %EXPORT_TAGS );
     _prompt                   => 'Term',
     _read_passphrase          => 'Term',
     _read_yes_or_no           => 'Term',
+    _socketpair               => 'Win32',
 );
 
 %EXPORT_TAGS = (
@@ -33,6 +35,7 @@ use vars qw( %FUNC_TO_MOD %EXPORT_TAGS );
     ssh1mp   => [ qw( _compute_session_id _mp_linearize ) ],
     ssh2mp   => [ qw( bitsize bin2mp mp2bin mod_inverse ) ],
     authfile => [ qw( _load_public_key _load_private_key _save_private_key ) ],
+    win32    => [ qw( _socketpair ) ],
     all      => [ keys %FUNC_TO_MOD ],
 );
 
