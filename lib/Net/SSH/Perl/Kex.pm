@@ -101,12 +101,12 @@ sub exchange {
     bless $kex, $kex->{class_name};
     $kex->exchange;
 
-    $ssh->debug("Waiting for NEWKEYS message.");
-    $packet = Net::SSH::Perl::Packet->read_expect($ssh, SSH2_MSG_NEWKEYS);
-
     $ssh->debug("Send NEWKEYS.");
     $packet = $ssh->packet_start(SSH2_MSG_NEWKEYS);
     $packet->send;
+
+    $ssh->debug("Waiting for NEWKEYS message.");
+    $packet = Net::SSH::Perl::Packet->read_expect($ssh, SSH2_MSG_NEWKEYS);
 
     $ssh->debug("Enabling encryption/MAC/compression.");
     $ssh->{kex} = $kex;
