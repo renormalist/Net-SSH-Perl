@@ -19,6 +19,7 @@ requires:
   Digest::HMAC_SHA1     : 0
   Digest::MD5           : 0
   Digest::SHA1          : 2.10
+  File::HomeDir         : 0
   IO::Socket            : 0
   Math::GMP             : 1.04
   Math::Pari            : 2.001804

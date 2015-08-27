@@ -19,6 +19,7 @@ use base qw( Net::SSH::Perl );
 
 use Carp qw( croak );
 use File::Spec::Functions qw( catfile );
+use File::HomeDir ();
 
 sub select_class { 'IO::Select' }
 
@@ -51,7 +52,7 @@ sub version_string {
 
 sub _proto_init {
     my $ssh = shift;
-    my $home = $ENV{HOME} || $ENV{USERPROFILE} || (getpwuid($>))[7];
+    my $home = File::HomeDir->my_home;
     my $config = $ssh->{config};
 
     unless ($config->get('user_known_hosts')) {
