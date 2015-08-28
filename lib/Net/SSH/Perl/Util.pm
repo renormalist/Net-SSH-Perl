@@ -25,6 +25,7 @@ use vars qw( %FUNC_TO_MOD %EXPORT_TAGS );
     _prompt                   => 'Term',
     _read_passphrase          => 'Term',
     _read_yes_or_no           => 'Term',
+    _current_user_win32       => 'Win32',
     _socketpair               => 'Win32',
 );
 
@@ -35,7 +36,7 @@ use vars qw( %FUNC_TO_MOD %EXPORT_TAGS );
     ssh1mp   => [ qw( _compute_session_id _mp_linearize ) ],
     ssh2mp   => [ qw( bitsize bin2mp mp2bin mod_inverse ) ],
     authfile => [ qw( _load_public_key _load_private_key _save_private_key ) ],
-    win32    => [ qw( _socketpair ) ],
+    win32    => [ qw( _current_user_win32 _socketpair ) ],
     all      => [ keys %FUNC_TO_MOD ],
 );
 

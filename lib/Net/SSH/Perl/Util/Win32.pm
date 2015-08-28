@@ -5,7 +5,7 @@ use warnings;
 
 use Socket ();
 use POSIX ();
-
+use if $^O eq 'MSWin32', Win32 => ();
 
 # Taken from AnyEvent::Util
 # Thanks, Mark!
@@ -54,6 +54,12 @@ sub _socketpair() {
     }
 
     ()
+}
+
+sub _current_user_win32 {
+    my $user;
+    eval { $user = Win32::LoginName() };
+    return $user;
 }
 
 1;

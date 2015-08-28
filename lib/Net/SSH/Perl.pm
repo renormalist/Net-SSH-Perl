@@ -9,7 +9,7 @@ use Net::SSH::Perl::Buffer;
 use Net::SSH::Perl::Config;
 use Net::SSH::Perl::Constants qw( :protocol :compat :hosts );
 use Net::SSH::Perl::Cipher;
-use Net::SSH::Perl::Util qw( :hosts _read_yes_or_no );
+use Net::SSH::Perl::Util qw( :hosts _read_yes_or_no _current_user_win32 );
 
 use Errno qw( EAGAIN EWOULDBLOCK );
 
@@ -100,6 +100,10 @@ sub client_version_string { $_[0]->{client_version_string} }
 sub server_version_string { $_[0]->{server_version_string} }
 
 sub _current_user {
+    if ( $^O eq 'MSWin32' ) {
+        return _current_user_win32();
+    }
+
     my $user;
     eval { $user = scalar getpwuid $> };
     return $user;
