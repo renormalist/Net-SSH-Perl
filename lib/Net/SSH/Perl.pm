@@ -29,8 +29,6 @@ eval {
 
 $VERSION = '1.37';
 
-sub VERSION { $VERSION }
-
 sub new {
     my $class = shift;
     my $host = shift;

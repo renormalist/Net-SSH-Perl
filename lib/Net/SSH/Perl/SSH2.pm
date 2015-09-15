@@ -21,6 +21,9 @@ use Carp qw( croak );
 use File::Spec::Functions qw( catfile );
 use File::HomeDir ();
 
+use vars qw( $VERSION $CONFIG $HOSTNAME );
+$VERSION = $Net::SSH::Perl::VERSION;
+
 sub select_class { 'IO::Select' }
 
 sub _dup {

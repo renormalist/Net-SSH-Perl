@@ -22,6 +22,9 @@ use Carp qw( croak );
 use File::Spec::Functions qw( catfile );
 use File::HomeDir ();
 
+use vars qw( $VERSION $CONFIG $HOSTNAME );
+$VERSION = $Net::SSH::Perl::VERSION;
+
 sub version_string {
     my $class = shift;
     sprintf "Net::SSH::Perl Version %s, protocol version %s.%s.",
