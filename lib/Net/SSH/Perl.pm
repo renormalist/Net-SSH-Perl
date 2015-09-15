@@ -27,7 +27,7 @@ eval {
     $HOSTNAME = hostname();
 };
 
-$VERSION = '1.37';
+$VERSION = '1.39';
 
 sub new {
     my $class = shift;
