@@ -8,6 +8,7 @@ my %prereq = (
         'Digest::MD5'       => 0,
         'IO::Socket'        => 0,
         'File::Spec'        => 0,
+        'File::HomeDir'     => 0,
 );
 
 my %SSH_PREREQ = (
