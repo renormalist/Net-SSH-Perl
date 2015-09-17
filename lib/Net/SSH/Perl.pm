@@ -11,7 +11,7 @@ use Net::SSH::Perl::Constants qw( :protocol :compat :hosts );
 use Net::SSH::Perl::Cipher;
 use Net::SSH::Perl::Util qw( :hosts _read_yes_or_no _current_user_win32 );
 
-use Errno qw( EAGAIN EWOULDBLOCK );
+use Errno;
 
 use vars qw( $VERSION $CONFIG $HOSTNAME );
 $CONFIG = {};
@@ -282,7 +282,7 @@ sub _read_version_line {
         my $buf;
         my $len = sysread($sock, $buf, 1);
         unless(defined($len)) {
-            next if $! == EAGAIN || $! == EWOULDBLOCK;
+            next if $!{EAGAIN} || $!{EWOULDBLOCK};
             croak "Read from socket failed: $!";
         }
         croak "Connection closed by remote host" if $len == 0;
