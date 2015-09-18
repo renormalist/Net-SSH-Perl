@@ -1,5 +1,8 @@
 Revision history for Net::SSH::Perl
 
+1.41 2015.09.18
+    - use Errno constants in more portable way, see perldoc Errno
+
 1.40 2015.09.17
     - declare new dependency to File::HomeDir in Makefile.PL
 
