@@ -21,6 +21,8 @@ use Carp qw( croak );
 use File::Spec::Functions qw( catfile );
 use File::HomeDir ();
 
+use Errno;
+
 use vars qw( $VERSION $CONFIG $HOSTNAME );
 $VERSION = $Net::SSH::Perl::VERSION;
 
@@ -391,8 +393,12 @@ sub client_loop {
         my $oc = grep { defined } @{ $cmgr->{channels} };
         last unless $oc > 1;
 
-        my($rready, $wready) = $select_class->select($rb, $wb)
-            or die "select: $!";
+        my($rready, $wready) = $select_class->select($rb, $wb);
+        unless (defined $rready or defined $wready) {
+            next if ( $!{EAGAIN} || $!{EINTR} );
+            die "select: $!";
+        }
+
         $cmgr->process_input_packets($rready, $wready);
 
         for my $ab (@$rready) {
