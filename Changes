@@ -1,5 +1,9 @@
 Revision history for Net::SSH::Perl
 
+1.42 2015.09.28
+    - Fix issue with long selects getting interrupted by signals and dying (Andrew Hoying)
+    - fix version cpan meta info
+
 1.41 2015.09.18
     - use Errno constants in more portable way, see perldoc Errno
 
