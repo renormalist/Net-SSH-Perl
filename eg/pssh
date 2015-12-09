@@ -1,5 +1,4 @@
 #!/usr/bin/perl -w
-# $Id: pssh,v 1.16 2001/04/28 05:28:40 btrott Exp $
 
 use strict;
 

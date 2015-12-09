@@ -1,6 +1,5 @@
 #!/usr/bin/perl
 
-# $Id: 05-cipher.t,v 1.5 2008/10/16 13:47:42 turnstep Exp $
 
 use strict;
 use warnings;
