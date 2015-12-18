@@ -1,5 +1,4 @@
 #!/usr/bin/perl -w
-# $Id: remoteinteract2.pl,v 1.1 2001/08/29 08:24:57 btrott Exp $
 
 ## remoteinteract2.pl is an example of using Net::SSH::Perl to communicate
 ## interactively with a remote command. In this case, that command is the
