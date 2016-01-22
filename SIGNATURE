@@ -1,5 +1,5 @@
 This file contains message digests of all files listed in MANIFEST,
-signed via the Module::Signature module, version 0.70.
+signed via the Module::Signature module, version 0.73.
 
 To verify the content in this distribution, first make sure you have
 Module::Signature installed, then type:
@@ -12,14 +12,14 @@ the distribution may already have been compromised, and you should
 not run its Makefile.PL or Build.PL.
 
 -----BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA1
+Hash: RIPEMD160
 
 SHA1 cc451367f759ef30c8200859b4248973a973b623 .perlcriticrc
-SHA1 08fdfcbe9db3d8d0c13a3dc4681001cf2c7247ad Changes
+SHA1 cdff9358d8fff5c7b329f60026435fb7bdb9eef1 Changes
 SHA1 f235ba4160673bcb7c9d58c2f09dbc7fc0efadea LICENSE
 SHA1 d6a61ea9371de92127e4afc234b6f6651535ed1b MANIFEST
 SHA1 84efc47ee3a4253e0ab8029a26c263a6553beda7 MANIFEST.SKIP
-SHA1 378c9d5867b7e8cba6f5576b4593d6303264ee8d META.yml
+SHA1 ee407218354a4a607275b5b51a914756d3bda63e META.yml
 SHA1 ed90f5c217f68c08f9fcdeb40870b09e855d704d Makefile.PL
 SHA1 c4f71c29acb966232282d57b570484f7ceef208b README
 SHA1 ca4a01e14284c7a3efa45229e3ba0877ade60285 ToDo
@@ -29,7 +29,7 @@ SHA1 44ce715b8029f44123388bbc0fe50cea4334dc79 eg/pssh
 SHA1 3a7ecc57b316a02a72f8f56602b6d59aa4a4c2ce eg/pssh-keygen
 SHA1 c36af8adc7bcc9ccbef3beed15723a4a0e8db15a eg/remoteinteract.pl
 SHA1 7ff227ceb0c28c8f98b5772072eb6bf908f96555 eg/remoteinteract2.pl
-SHA1 5cba731f48de8687477d24364851434bf148cf9c lib/Net/SSH/Perl.pm
+SHA1 c2422bd74c5e27b16efa54640594491c3738fec8 lib/Net/SSH/Perl.pm
 SHA1 f7b6f7cd52ce138615b0fa1bbd0b965bd138e4e8 lib/Net/SSH/Perl/Agent.pm
 SHA1 42d0e1ae5b5c4f90dfcc8b28076ec94c682174f0 lib/Net/SSH/Perl/Auth.pm
 SHA1 2587036da2cddb5278e84db1cc10d2d2c2cd1029 lib/Net/SSH/Perl/Auth/ChallengeResponse.pm
@@ -54,7 +54,7 @@ SHA1 f9f39ddf40ec8577207a98e10494fc8baea249c6 lib/Net/SSH/Perl/Cipher/IDEA.pm
 SHA1 0479eae6ae99108e46cc859c2f053845ace7ab7d lib/Net/SSH/Perl/Cipher/RC4.pm
 SHA1 3df4c4dda730c0114f23d80b30a37b33ccefd40c lib/Net/SSH/Perl/Comp.pm
 SHA1 b75708438f4def2fd96fa8e1570ab999b49f7e19 lib/Net/SSH/Perl/Comp/Zlib.pm
-SHA1 61063ffcb55c106e534918585d61950659dc84a9 lib/Net/SSH/Perl/Config.pm
+SHA1 0a287a3f907d3ffeff0e01be6a0553b546869747 lib/Net/SSH/Perl/Config.pm
 SHA1 59160d52f16e23fb362948632d8325ce7dcfc4af lib/Net/SSH/Perl/Constants.pm
 SHA1 921a224def784e988c01395b2634bcb9bdd2cbd9 lib/Net/SSH/Perl/Handle.pm
 SHA1 008d3ebd3a2e5b2ff5a622bba6b3f2286a587948 lib/Net/SSH/Perl/Handle/SSH1.pm
@@ -95,9 +95,8 @@ SHA1 9a32e630c87d1cc3ceaf2b5585519b55d12b79d3 t/config
 SHA1 885358760910acc3898301c9af18cd634ddd81a8 t/psshd
 SHA1 9b7aa51c0e3a2fede4a7b4767c3d507f37f46696 t/test-common.pl
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.11 (GNU/Linux)
 
-iEYEARECAAYFAlIFaFUACgkQJszQZs1hPJsUVACdH0C4dZaSHdr9Su4wvHkEW81K
-nAcAoIV1jUIA6aDbhob/EKz/VTic1zzD
-=5K3H
+iEYEAREDAAYFAlQygXMACgkQvJuQZxSWSshwHQCfWfvOYcw1M046u+UD69T+rK98
+GPEAnAqyaggcE/JE7nfxJE0ml/7N+Xnt
+=WK3s
 -----END PGP SIGNATURE-----

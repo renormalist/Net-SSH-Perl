@@ -1,5 +1,9 @@
 Revision history for Net::SSH::Perl
 
+1.38 2014.10.06
+
+    - RT #99284 - install valid SIGNATURE file
+
 1.37 2014.03.17
 
     - RT #91840 - enabled config option "StrictHostKeyChecking"
