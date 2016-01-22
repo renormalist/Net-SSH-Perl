@@ -1,5 +1,7 @@
+
 package Net::SSH::Perl::Kex::DH;
 use strict;
+use warnings;
 
 use Net::SSH::Perl::Buffer;
 use Net::SSH::Perl::Packet;
@@ -140,36 +142,36 @@ __END__
 
 =head1 NAME
 
-Net::SSH::Perl::Kex::DH - Diffie-Hellman Key Exchange Base Class
+Net::SSH::Perl::Kex::DH - Diffie-Hellman Group Agnostic Key Exchange
 
 =head1 SYNOPSIS
+	
+    # This class should not be used directly, but rather as a base for DH1, DH14, etc 
 
-    use Net::SSH::Perl::Kex;
-    my $kex = Net::SSH::Perl::Kex->new;
-    my $dh1 = bless $kex, 'Net::SSH::Perl::Kex::DH1';
+    use Net::SSH::Perl::Kex::DH;
+    use base qw( Net::SSH::Perl::Kex::DH );
 
-    $dh1->exchange;
-
-or
-
-    use Net::SSH::Perl::Kex;
-    my $kex = Net::SSH::Perl::Kex->new;
-    my $dh14 = bless $kex, 'Net::SSH::Perl::Kex::DH14';
-
-    $dh1->exchange;
+    # Simply implement _dh_new_group and return the Crypt::DH group
+    sub _dh_new_group {
+        my $kex = shift;
+        ...
+        $dh;
+    }
 
 =head1 DESCRIPTION
 
-I<Net::SSH::Perl::Kex::DH> implements Diffie-Hellman Key
+I<Net::SSH::Perl::Kex::DH> implements Diffie-Hellman Group Agnostic
 Exchange for I<Net::SSH::Perl>. It is a subclass of
 I<Net::SSH::Perl::Kex>.
+
+Key Exchange uses the Diffie-Hellman key exchange algorithm
+to produce a shared secret key between client and server, without
+ever sending the shared secret over the insecure network. All that is
+sent are the client and server public keys.
 
 =head1 AUTHOR & COPYRIGHTS
 
 Please see the Net::SSH::Perl manpage for author, copyright, and
 license information.
-
-Modifications for enabling DH Group 14 support and DH Group Exchange
-by Lance Kinley E<lkinley@loyaltymethods.com>
 
 =cut

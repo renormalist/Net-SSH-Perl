@@ -1,7 +1,7 @@
-# $Id: ChallengeResponse.pm,v 1.3 2003/12/03 15:35:21 autarch Exp $
 
 package Net::SSH::Perl::Auth::ChallengeResponse;
 use strict;
+use warnings;
 
 use Net::SSH::Perl::Constants qw(
     SSH_CMSG_AUTH_TIS

@@ -1,7 +1,7 @@
-# $Id: Kex.pm,v 1.24 2009/02/02 01:18:27 turnstep Exp $
 
 package Net::SSH::Perl::Kex;
 use strict;
+use warnings;
 
 use Net::SSH::Perl::Cipher;
 use Net::SSH::Perl::Mac;
@@ -97,12 +97,12 @@ sub exchange {
     bless $kex, $kex->{class_name};
     $kex->exchange;
 
-    $ssh->debug("Waiting for NEWKEYS message.");
-    $packet = Net::SSH::Perl::Packet->read_expect($ssh, SSH2_MSG_NEWKEYS);
-
     $ssh->debug("Send NEWKEYS.");
     $packet = $ssh->packet_start(SSH2_MSG_NEWKEYS);
     $packet->send;
+
+    $ssh->debug("Waiting for NEWKEYS message.");
+    $packet = Net::SSH::Perl::Packet->read_expect($ssh, SSH2_MSG_NEWKEYS);
 
     $ssh->debug("Enabling encryption/MAC/compression.");
     $ssh->{kex} = $kex;
@@ -136,12 +136,12 @@ sub exchange_kexinit {
     $packet->send;
 
     if ( defined $received_packet ) {
-	$ssh->debug("Received key-exchange init (KEXINIT), sent response.");
-	$packet = $received_packet;
+        $ssh->debug("Received key-exchange init (KEXINIT), sent response.");
+        $packet = $received_packet;
     }
     else {
-	$ssh->debug("Sent key-exchange init (KEXINIT), wait response.");
-	$packet = Net::SSH::Perl::Packet->read_expect($ssh, SSH2_MSG_KEXINIT);
+        $ssh->debug("Sent key-exchange init (KEXINIT), wait response.");
+        $packet = Net::SSH::Perl::Packet->read_expect($ssh, SSH2_MSG_KEXINIT);
     }
     $kex->{server_kexinit} = $packet->data;
 

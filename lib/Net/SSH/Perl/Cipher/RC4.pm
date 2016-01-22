@@ -1,8 +1,8 @@
-# $Id: RC4.pm,v 1.5 2001/05/04 08:58:22 btrott Exp $
 
 package Net::SSH::Perl::Cipher::RC4;
 
 use strict;
+use warnings;
 
 use Net::SSH::Perl::Cipher;
 use base qw( Net::SSH::Perl::Cipher );

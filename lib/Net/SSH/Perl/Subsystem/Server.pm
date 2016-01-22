@@ -1,7 +1,7 @@
-# $Id: Server.pm,v 1.8 2008/10/21 16:11:18 turnstep Exp $
 
 package Net::SSH::Perl::Subsystem::Server;
 use strict;
+use warnings;
 
 use Net::SSH::Perl::Buffer;
 use Carp qw( croak );

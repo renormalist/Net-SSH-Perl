@@ -1,7 +1,7 @@
-# $Id: SSH1MP.pm,v 1.3 2001/04/17 00:55:19 btrott Exp $
 
 package Net::SSH::Perl::Util::SSH1MP;
 use strict;
+use warnings;
 
 use Digest::MD5 qw( md5 );
 use Math::GMP;

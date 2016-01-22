@@ -1,7 +1,7 @@
-# $Id: Agent.pm,v 1.6 2009/01/26 01:09:40 turnstep Exp $
 
 package Net::SSH::Perl::Agent;
 use strict;
+use warnings;
 
 use IO::Socket;
 use Carp qw( croak );

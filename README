@@ -1,4 +1,3 @@
-$Id: README,v 1.23 2008/10/02 18:53:54 turnstep Exp $
 
 This is Net::SSH::Perl. It contains implementations of
 both the SSH1 and SSH2 protocols.

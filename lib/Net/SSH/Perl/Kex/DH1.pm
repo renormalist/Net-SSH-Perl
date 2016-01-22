@@ -1,6 +1,12 @@
-# $Id: DH1.pm,v 1.19 2009/01/26 01:00:25 turnstep Exp $
 
 package Net::SSH::Perl::Kex::DH1;
+
+use strict;
+use warnings;
+
+use Carp qw( croak );
+use Crypt::DH;
+
 use base qw( Net::SSH::Perl::Kex::DH );
 
 sub group { 1 }
@@ -56,8 +62,5 @@ And the generator I<g> is set to I<2>.
 
 Please see the Net::SSH::Perl manpage for author, copyright, and
 license information.
-
-DH1 support split from original DH1 class by:
-Lance Kinley E<lkinley@loyaltymethods.com>
 
 =cut

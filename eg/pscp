@@ -1,5 +1,4 @@
 #!/usr/bin/perl -w
-# $Id: pscp,v 1.5 2001/08/07 18:21:38 btrott Exp $
 
 use strict;
 

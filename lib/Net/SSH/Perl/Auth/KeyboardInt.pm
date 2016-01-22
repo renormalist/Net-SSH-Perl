@@ -1,8 +1,8 @@
-# $Id: KeyboardInt.pm,v 1.6 2003/12/03 15:35:21 autarch Exp $
 
 package Net::SSH::Perl::Auth::KeyboardInt;
 
 use strict;
+use warnings;
 
 use Net::SSH::Perl::Util qw( _prompt );
 use Net::SSH::Perl::Constants qw(

@@ -1,7 +1,7 @@
-# $Id: RSA.pm,v 1.3 2001/04/17 00:55:19 btrott Exp $
 
 package Net::SSH::Perl::Util::RSA;
 use strict;
+use warnings;
 
 use Net::SSH::Perl::Constants qw( SSH_CMSG_AUTH_RSA_RESPONSE );
 use Net::SSH::Perl::Util qw( :ssh1mp );

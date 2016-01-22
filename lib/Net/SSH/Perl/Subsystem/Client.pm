@@ -1,7 +1,7 @@
-# $Id: Client.pm,v 1.8 2001/07/11 21:57:35 btrott Exp $
 
 package Net::SSH::Perl::Subsystem::Client;
 use strict;
+use warnings;
 
 use Net::SSH::Perl::Constants qw(
     SSH2_MSG_CHANNEL_OPEN_CONFIRMATION

@@ -1,7 +1,11 @@
 package Net::SSH::Perl::Kex::DH14;
 
 use strict;
+use warnings;
+
 use base qw( Net::SSH::Perl::Kex::DH );
+use Carp qw( croak );
+use Crypt::DH;
 
 sub group { 14 }
 
@@ -26,14 +30,15 @@ Net::SSH::Perl::Kex::DH14 - Diffie-Hellman Group 14 Key Exchange
 
     use Net::SSH::Perl::Kex;
     my $kex = Net::SSH::Perl::Kex->new;
-    my $dh1 = bless $kex, 'Net::SSH::Perl::Kex::DH14';
+    my $dh14 = bless $kex, 'Net::SSH::Perl::Kex::DH14';
 
-    $dh1->exchange;
+    $dh14->exchange;
 
 =head1 DESCRIPTION
 
 I<Net::SSH::Perl::Kex::DH14> implements Diffie-Hellman Group 14 Key
-Exchange for I<Net::SSH::Perl>. 
+Exchange for I<Net::SSH::Perl>. It is a subclass of
+I<Net::SSH::Perl::Kex>.
 
 Group 14 Key Exchange uses the Diffie-Hellman key exchange algorithm
 to produce a shared secret key between client and server, without
@@ -55,18 +60,12 @@ implementation. The I<p> value is set to
       DE2BCBF6 95581718 3995497C EA956AE5 15D22618 98FA0510
       15728E5A 8AACAA68 FFFFFFFF FFFFFFFF
 
+Which is taken from the libssh2 source code.
 And the generator I<g> is set to I<2>.
-
-See RFC 3526 for more information.
 
 =head1 AUTHOR & COPYRIGHTS
 
-Lance Kinley E<lkinley@loyaltymethods.com>
-
-Copyright (c) 2015 Loyalty Methods, Inc.
-
-=head1 LICENSE
-
-This program is free software; you can redistribute it and/or modify it under the same terms as Perl itself.
+Please see the Net::SSH::Perl manpage for author, copyright, and
+license information.
 
 =cut

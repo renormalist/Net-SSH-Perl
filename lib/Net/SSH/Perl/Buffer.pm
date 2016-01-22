@@ -1,7 +1,7 @@
-# $Id: Buffer.pm,v 1.14 2008/10/02 20:46:17 turnstep Exp $
 
 package Net::SSH::Perl::Buffer;
 use strict;
+use warnings;
 
 use constant MAX_BIGNUM => 32;
 
@@ -196,7 +196,7 @@ sub get_bignum2_bytes {
     my $buf = shift;
 
     my $num = $buf->get_str;
-    my $len = length($num);
+    my $len = CORE::length($num);
     return unless $len;
     # refuse negative (MSB set) bignums
     return if ord(substr($num,0,1)) & 0x80;

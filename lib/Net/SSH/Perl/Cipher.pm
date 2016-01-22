@@ -1,8 +1,8 @@
-# $Id: Cipher.pm,v 1.12 2008/09/24 19:21:20 turnstep Exp $
 
 package Net::SSH::Perl::Cipher;
 
 use strict;
+use warnings;
 use Carp qw( croak );
 
 use vars qw( %CIPHERS %CIPHERS_SSH2 %CIPH_REVERSE %SUPPORTED );

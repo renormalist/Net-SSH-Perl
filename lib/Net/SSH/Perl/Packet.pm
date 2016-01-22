@@ -1,8 +1,8 @@
-# $Id: Packet.pm,v 1.25 2008/09/24 19:21:20 turnstep Exp $
 
 package Net::SSH::Perl::Packet;
 
 use strict;
+use warnings;
 use Carp qw( croak );
 use IO::Select;
 use POSIX qw( :errno_h );
@@ -156,7 +156,8 @@ sub read_poll_ssh2 {
     my $ssh = shift;
     my $kex = $ssh->kex;
 
-    my($ciph, $mac, $comp, $authlen);
+    my($ciph, $mac, $comp);
+    my $authlen = 0;
     if ($kex) {
         $ciph = $kex->receive_cipher;
         $mac  = $kex->receive_mac;

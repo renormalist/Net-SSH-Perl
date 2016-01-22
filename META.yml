@@ -22,6 +22,7 @@ requires:
   Digest::HMAC_MD5      : 0
   Digest::MD5           : 0
   Digest::SHA           : 4.0.0
+  File::HomeDir         : 0
   IO::Socket            : 0
   Math::GMP             : 1.04
   Math::Pari            : 2.001804
@@ -41,7 +42,7 @@ resources:
   license               : http://dev.perl.org/licenses/
   bugtracker            : http://rt.cpan.org/Public/Dist/Display.html?Name=Net-SSH-Perl
   MailingList           : https://lists.sourceforge.net/lists/listinfo/ssh-sftp-perl-users
-  Repository            : http://sourceforge.net/projects/ssh-sftp-perl/
+  repository            : https://github.com/renormalist/Net-SSH-Perl
 
 meta-spec:
   version               : 1.4

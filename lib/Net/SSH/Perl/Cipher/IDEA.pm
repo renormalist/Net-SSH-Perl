@@ -1,8 +1,8 @@
-# $Id: IDEA.pm,v 1.7 2001/05/02 21:59:33 btrott Exp $
 
 package Net::SSH::Perl::Cipher::IDEA;
 
 use strict;
+use warnings;
 
 use Net::SSH::Perl::Cipher;
 use base qw( Net::SSH::Perl::Cipher );

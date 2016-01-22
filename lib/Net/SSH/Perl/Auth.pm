@@ -1,8 +1,8 @@
-# $Id: Auth.pm,v 1.9 2008/10/02 18:51:15 turnstep Exp $
 
 package Net::SSH::Perl::Auth;
 
 use strict;
+use warnings;
 use Carp qw( croak );
 
 use vars qw( %AUTH %AUTH_REVERSE @AUTH_ORDER %SUPPORTED );
