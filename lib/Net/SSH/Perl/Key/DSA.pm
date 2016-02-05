@@ -83,7 +83,7 @@ sub write_private {
             );
 }
 
-sub dump_public { $_[0]->ssh_name . ' ' . encode_base64( $_[0]->as_blob, '' ) }
+sub dump_public { join ' ', grep { defined } $_[0]->ssh_name, encode_base64( $_[0]->as_blob, '' ), $_[0]->comment }
 
 sub sign {
     my $key = shift;
