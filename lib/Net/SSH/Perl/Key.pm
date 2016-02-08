@@ -20,11 +20,20 @@ sub new {
     $key;
 }
 
-use vars qw( %KEY_TYPES );
+use vars qw( %KEY_TYPES  @KEY_TYPES );
 %KEY_TYPES = (
     'ssh-dss' => 'DSA',
     'ssh-rsa' => 'RSA',
     'ssh-ed25519' => 'Ed25519',
+    'ecdsa-sha2-nistp256' => 'ECDSA',
+);
+# Search order list of the keys above for fast parsing
+# of the authorized_keys files
+@KEY_TYPES = grep { exists $KEY_TYPES{$_} } qw(
+    ssh-rsa
+    ssh-dss
+    ssh-ed25519
+    ecdsa-sha2-nistp256
 );
 
 sub new_from_blob {
@@ -41,13 +50,35 @@ sub extract_public {
     my $class = shift;
     my($blob) = pop @_;
     my $expected_type = @_ ? shift : undef;
-    my($ssh_name, $data, $comment) = split /\s+/, $blob, 3;
-    die "Invalid or unsupported key type: $ssh_name" unless exists $KEY_TYPES{$ssh_name};
-    my $type = $KEY_TYPES{$ssh_name};
-    warn "Requested type: $expected_type doesn't match actual type: '$type'" if defined $expected_type && $expected_type ne $type;
+
+    # Locate the key-type in the blob.
+    my $type;
+    my $type_offset;
+    foreach my $t (@KEY_TYPES) {
+        $type_offset = index($blob,$t);
+        if($type_offset >= 0) {
+            $type = $t;
+            last;
+        }
+    }
+    if( !defined $type ) {
+        warn "Invalid public key line, could not find type designation, searched for: " . join(', ', @KEY_TYPES);
+        return;
+    }
+    # Check for options
+    if( $type_offset > 0 ) {
+        my $optstr = substr($blob,0,$type_offset,'');
+        # TODO: Is it worthwhile to provide parsing/setting of SSH options through this interface
+    }
+    substr($blob,0,length($type)+1,'');
+
+    my($data, $comment) = split /\s+/, $blob, 2;
+    die "Invalid or unsupported key type: $type" unless exists $KEY_TYPES{$type};
+    my $module = $KEY_TYPES{$type};
+    warn "Requested type: $expected_type doesn't match actual type: '$module'" if defined $expected_type && $expected_type ne $module;
     eval "use MIME::Base64";
     die $@ if $@;
-    __PACKAGE__->new($type, decode_base64($data), $comment);
+    __PACKAGE__->new($module, decode_base64($data), $comment);
 }
 
 BEGIN {
@@ -95,7 +126,7 @@ sub extract_public;
 sub dump_public;
 sub as_blob;
 sub equal;
-sub size;
+sub size { undef };
 
 sub comment {
     my $self = shift;

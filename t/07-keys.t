@@ -17,9 +17,16 @@ open my $fh, "<", $USER_AUTHORIZED_KEYS or die "can't read $USER_AUTHORIZED_KEYS
 my $line_number = 0;
 while ( my $line = <$fh> ) {
     $line_number++;
-    next unless $line =~ /^(ecdsa|ssh)-/;
+    $line =~ s/#.*//;   # Strip comments
     chomp($line);
-    my ($type,$pubkey,$comment) = split /\s+/, $line, 3;
+    next unless length $line;
+    my $type_offset;
+    foreach my $t (@Net::SSH::Perl::Key::KEY_TYPES) {
+        $type_offset=index($line,$t);
+        last if $type_offset >= 0;
+    }
+    next unless defined $type_offset && $type_offset >= 0;
+    my ($type,$pubkey,$comment) = split /\s+/, substr($line,$type_offset), 3;
     my $test_id = sprintf("L:%d,C:%s", $line_number, $comment);
     my $k;
     eval {
@@ -50,7 +57,7 @@ while ( my $line = <$fh> ) {
         if( exists $attrs{type} ) {
             ok(lc $attrs{type} eq $key_type, "$test_id type");
         }
-        if( exists $attrs{size} ) {
+        if( exists $attrs{size} && defined $k->size ) {
             ok($attrs{size} == $k->size, "$test_id size");
         }
     }
