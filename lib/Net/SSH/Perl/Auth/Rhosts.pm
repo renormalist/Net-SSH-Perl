@@ -1,3 +1,4 @@
+# $Id: Rhosts.pm,v 1.10 2003/12/03 15:35:21 autarch Exp $
 
 package Net::SSH::Perl::Auth::Rhosts;
 

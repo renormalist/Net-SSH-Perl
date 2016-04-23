@@ -1,4 +1,5 @@
 #!/usr/bin/perl -w
+# $Id: cmd.pl,v 1.4 2001/02/22 00:14:48 btrott Exp $
 
 use strict;
 
