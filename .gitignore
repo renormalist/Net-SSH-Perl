@@ -1,4 +1,7 @@
 .*
+Perl.bs
+Perl.c
+Perl.o
 !.gitignore
 !.perlcriticrc
 MYMETA.json
