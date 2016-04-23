@@ -1,4 +1,4 @@
-# $Id: DH.pm,v 1.19 2009/01/26 01:00:25 turnstep Exp $
+# $id: dh.pm,v 1.19 2009/01/26 01:00:25 turnstep exp $
 
 package Net::SSH::Perl::Kex::DH;
 use strict;
@@ -146,8 +146,8 @@ __END__
 Net::SSH::Perl::Kex::DH - Diffie-Hellman Group Agnostic Key Exchange
 
 =head1 SYNOPSIS
-
-    # This class should not be used directly, but rather as a base for DH1, DH14, etc
+	
+    # This class should not be used directly, but rather as a base for DH1, DH14, etc 
 
     use Net::SSH::Perl::Kex::DH;
     use base qw( Net::SSH::Perl::Kex::DH );
