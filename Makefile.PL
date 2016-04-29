@@ -19,6 +19,10 @@ my %SSH_PREREQ = (
     },
 
     2 => {
+        'Crypt::OpenSSH::ChachaPoly' => '0.02',
+        'Crypt::OpenBSD::Blowfish' => '0.01',
+        'Crypt::Curve25519' => '0.05',
+        'Crypt::Ed25519'    => '1.03',
         'CryptX'            => 0,
         'Crypt::Curve25519' => '0.05',
         'Crypt::DH'         => '0.01',
