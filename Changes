@@ -1,5 +1,12 @@
 Revision history for Net::SSH::Perl
 
+2.02 2016.04.29
+
+    - require Crypt::OpenSSH::ChachaPoly
+    - require Crypt::OpenBSD::Blowfish
+    - require Crypt::Curve25519
+    - require Crypt::Ed25519
+
 2.01 2016.02.19
 
     - Use CryptX to reduce module depedencies
