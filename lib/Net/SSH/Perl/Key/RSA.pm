@@ -95,7 +95,7 @@ sub write_private {
     close $fh or croak "Can't close $key_file: $!";
 }
 
-sub dump_public { join(' ', grep { defined } $_[0]->ssh_name, encode_base64( $_[0]->as_blob, '' ), $_[0]->comment) }
+sub dump_public { $_[0]->ssh_name . ' ' . encode_base64( $_[0]->as_blob, '' ) }
 
 sub sign {
     my $key = shift;

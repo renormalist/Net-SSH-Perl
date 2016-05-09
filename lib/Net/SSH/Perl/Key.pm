@@ -15,26 +15,15 @@ sub new {
         die "Key class '$class' is unsupported: $@" if $@;
     }
     my $key = bless {}, $class;
-    my $comment = @_ == 2 ? pop @_ : undef;
     $key->init(@_);
-    $key->comment($comment);
     $key;
 }
 
-use vars qw( %KEY_TYPES  @KEY_TYPES );
+use vars qw( %KEY_TYPES );
 %KEY_TYPES = (
     'ssh-dss' => 'DSA',
     'ssh-rsa' => 'RSA',
     'ssh-ed25519' => 'Ed25519',
-    'ecdsa-sha2-nistp256' => 'ECDSA',
-);
-# Search order list of the keys above for fast parsing
-# of the authorized_keys files
-@KEY_TYPES = grep { exists $KEY_TYPES{$_} } qw(
-    ssh-rsa
-    ssh-dss
-    ssh-ed25519
-    ecdsa-sha2-nistp256
 );
 
 sub new_from_blob {
@@ -49,37 +38,12 @@ sub new_from_blob {
 
 sub extract_public {
     my $class = shift;
-    my($blob) = pop @_;
-    my $expected_type = @_ ? shift : undef;
-
-    # Locate the key-type in the blob.
-    my $type;
-    my $type_offset;
-    foreach my $t (@KEY_TYPES) {
-        $type_offset = index($blob,$t);
-        if($type_offset >= 0) {
-            $type = $t;
-            last;
-        }
-    }
-    if( !defined $type ) {
-        warn "Invalid public key line, could not find type designation, searched for: " . join(', ', @KEY_TYPES);
-        return;
-    }
-    # Check for options
-    if( $type_offset > 0 ) {
-        my $optstr = substr($blob,0,$type_offset,'');
-        # TODO: Is it worthwhile to provide parsing/setting of SSH options through this interface
-    }
-    substr($blob,0,length($type)+1,'');
-
-    my($data, $comment) = split /\s+/, $blob, 2;
-    die "Invalid or unsupported key type: $type" unless exists $KEY_TYPES{$type};
-    my $module = $KEY_TYPES{$type};
-    warn "Requested type: $expected_type doesn't match actual type: '$module'" if defined $expected_type && $expected_type ne $module;
+    my($blob) = @_;
+    my($ssh_name, $data) = split /\s+/, $blob;
+    my $type = $KEY_TYPES{$ssh_name};
     eval "use MIME::Base64";
     die $@ if $@;
-    __PACKAGE__->new($module, decode_base64($data), $comment);
+    __PACKAGE__->new($type, decode_base64($data));
 }
 
 BEGIN {
@@ -127,16 +91,7 @@ sub extract_public;
 sub dump_public;
 sub as_blob;
 sub equal;
-sub size { undef };
-
-sub comment {
-    my $self = shift;
-    my $comment = shift;
-    if( defined $comment and length $comment ) {
-        $self->{comment} = $comment;
-    }
-    return exists $self->{comment} ? $self->{comment} : undef;
-}
+sub size;
 
 sub fingerprint {
     my $key = shift;
@@ -182,7 +137,7 @@ the Ed25519 implementation uses I<Crypt::Ed25519>.
 
 Creates a new object of type I<Net::SSH::Perl::Key::$key_type>,
 after loading the class implementing I<$key_type>. I<$key_type>
-should be C<DSA>, C<RSA1>, or C<Ed25519>.
+should be C<DSA>, C<RSA1>, or C<Ed25519>.  
 
 I<$blob>, if present, should be a string representation of the key,
 from which the key object can be initialized. In fact, it should
@@ -216,7 +171,7 @@ denoted by I<$key_type> (either C<DSA>, C<RSA1> or C<Ed25519>).
 
 =head2 Net::SSH::Perl::Key->keygen($key_type, $bits)
 
-$key_type is either RSA or DSA.  Generates a new DSA or RSA key
+$key_type is either RSA or DSA.  Generates a new DSA or RSA key 
 and returns that key. The key returned is the private key, which
 (presumably) contains all of the public key data, as well. I<$bits>
  is the number of bits in the key.
@@ -234,19 +189,16 @@ Generates a new Ed25519 key with an optional comment.
 Returns the new key object, which is bless into the Ed25519
 subclass.
 
-=head2 Net::SSH::Perl::Key->extract_public([$key_type,] $key_string)
+=head2 Net::SSH::Perl::Key->extract_public($key_type, $key_string)
 
 Given a key string I<$key_string>, which should be a textual
-representation of the public portion of a key, extracts the key
-attributes out of that string.  This is used to extract public keys out
-of entries in F<known_hosts> and public identity files.
+representation of the public portion of a key of I<$key_type>,
+extracts the key attributes out of that string. This is used to
+extract public keys out of entries in F<known_hosts> and public
+identity files.
 
 Returns the new key object, which is blessed into the subclass
-determined by reading the I<$key_string>.
-
-Throws a warning if the optional parameter I<$key_type> passed in
-mismatches the determined key type.
-
+denoted by I<$key_type> (either C<DSA> or C<RSA1>).
 
 =head2 $key->write_private([ $file [, $pass, $ciphername, $rounds] ])
 
