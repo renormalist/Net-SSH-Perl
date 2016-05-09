@@ -1,9 +1,6 @@
 package Net::SSH::Perl::Key::Ed25519;
 use strict;
 
-require XSLoader;
-XSLoader::load('Net::SSH::Perl');
-
 use Net::SSH::Perl::Buffer;
 use Net::SSH::Perl::Constants qw( SSH_COMPAT_BUG_SIGBLOB );
 use Crypt::Digest::SHA512 qw( sha512 );
@@ -11,7 +8,7 @@ use Crypt::Digest::SHA512 qw( sha512 );
 use base qw( Net::SSH::Perl::Key );
 
 use Crypt::PRNG qw( random_bytes );
-use MIME::Base64;
+use Crypt::Misc qw( :all );
 use Carp qw( croak );
 
 use constant MARK_BEGIN => "-----BEGIN OPENSSH PRIVATE KEY-----\n";
@@ -23,6 +20,9 @@ use constant SALT_LEN => 16;
 use constant DEFAULT_ROUNDS => 16;
 use constant DEFAULT_CIPHERNAME => 'aes256-cbc';
 use constant KDFNAME => 'bcrypt';
+
+use XSLoader;
+XSLoader::load('Net::SSH::Perl');
 
 sub ssh_name { 'ssh-ed25519' }
 
@@ -57,8 +57,9 @@ sub read_private {
     open FH, $key_file or return;
     my $content = do { local $/; <FH> };
     close FH;
-    my $blob = decode_base64(substr($content,length(MARK_BEGIN),
-        length($content)-length(MARK_END)-length(MARK_BEGIN)));
+    $content = substr($content,length(MARK_BEGIN),
+        length($content)-length(MARK_END)-length(MARK_BEGIN));
+    my $blob = decode_b64($content);
     my $str = AUTH_MAGIC;
     croak "Invalid key format" unless $blob =~ /^${str}/;
 
@@ -219,14 +220,14 @@ sub write_private {
     local *FH;
     open FH, ">$key_file" or die "Cannot write key file";
     print FH MARK_BEGIN;
-    print FH encode_base64($b->bytes); 
+    print FH encode_b64($b->bytes),"\n"; 
     print FH MARK_END;
     close FH;
 }
 
 sub dump_public {
     my $key = shift;
-    my $pub = $key->ssh_name . ' ' . encode_base64( $key->as_blob, '');
+    my $pub = $key->ssh_name . ' ' . encode_b64( $key->as_blob );
     $pub .= ' ' . $key->{comment} if defined $key->{comment};
     $pub
 }

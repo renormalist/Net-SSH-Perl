@@ -10,8 +10,11 @@ use constant POLY1305_KEYLEN => 32;
 use constant ONE => chr(1) . "\0" x 7; # NB little endian
 use constant AADLEN => 4;
 
-require XSLoader;
-XSLoader::load('Crypt::OpenSSH::ChachaPoly');
+use Module::Loaded;
+unless (is_loaded('Crypt::OpenSSH::ChachaPoly')) {
+   use XSLoader;
+   XSLoader::load('Net::SSH::Perl');
+}
 
 sub new {
     my $class = shift;

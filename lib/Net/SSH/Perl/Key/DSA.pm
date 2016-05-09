@@ -10,7 +10,7 @@ use Net::SSH::Perl::Constants qw( SSH_COMPAT_BUG_SIGBLOB );
 use Net::SSH::Perl::Key;
 use base qw( Net::SSH::Perl::Key );
 
-use MIME::Base64 qw( encode_base64 );
+use Crypt::Misc qw( encode_b64 );
 use Crypt::PK::DSA;
 use Carp qw( croak );
 
@@ -30,7 +30,7 @@ sub init {
         my $ktype = $b->get_str;
         croak __PACKAGE__, "->init: cannot handle type '$ktype'"
             unless $ktype eq $key->ssh_name;
-        my $pubkey = $key->ssh_name . ' ' . encode_base64($b->bytes,'');
+        my $pubkey = $key->ssh_name . ' ' . encode_b64($b->bytes);
         $key->{dsa}->import_key( \$pubkey );
     }
 
@@ -70,7 +70,7 @@ sub write_private {
     close $fh or croak "Can't close $key_file: $!";
 }
 
-sub dump_public { $_[0]->ssh_name . ' ' . encode_base64( $_[0]->as_blob, '' ) }
+sub dump_public { $_[0]->ssh_name . ' ' . encode_b64( $_[0]->as_blob ) }
 
 sub sign {
     my $key = shift;
@@ -82,9 +82,12 @@ sub sign {
     return unless ord(substr($dersig,0,1,'')) == 2; # Type INTEGER
     my $intlen = ord(substr($dersig,0,1,''));
     my $r = substr($dersig,0,$intlen,'');
+    # numbers with highest bit set are padded with leading zero so strip it 
+    $r = substr($r,$intlen - INTBLOB_LEN) if $intlen > INTBLOB_LEN;
     return unless ord(substr($dersig,0,1,'')) == 2; # Type INTEGER
     $intlen = ord(substr($dersig,0,1,''));
     my $s = substr($dersig,0,$intlen,'');
+    $s = substr($s,$intlen - INTBLOB_LEN) if $intlen > INTBLOB_LEN;
 
     $r = "\0" x (INTBLOB_LEN-length($r)) . $r;
     $s = "\0" x (INTBLOB_LEN-length($s)) . $s;

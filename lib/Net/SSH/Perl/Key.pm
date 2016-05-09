@@ -41,9 +41,10 @@ sub extract_public {
     my($blob) = @_;
     my($ssh_name, $data) = split /\s+/, $blob;
     my $type = $KEY_TYPES{$ssh_name};
-    eval "use MIME::Base64";
+    return unless $type;
+    eval "use Crypt::Misc qw( decode_b64 )";
     die $@ if $@;
-    __PACKAGE__->new($type, decode_base64($data));
+    __PACKAGE__->new($type, decode_b64($data));
 }
 
 BEGIN {
